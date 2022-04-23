@@ -146,7 +146,6 @@ async function initCall() {
     welcome.hidden = true;
     call.hidden = false;
     await getMedia();
-    makeConnection();
 }
   
 
@@ -307,12 +306,23 @@ function makeConnection(remoteSocketId, remoteNickname) {
     myPeerConnection.addEventListener("icecandidate", (event) => {
         handleIce(event, remoteSocketId);
     });
-    myPeerConnection.addEventListener("addstream", (event) => {
-        handleAddStream(event, remoteSocketId, remoteNickname);
-    });
-    myStream
-      .getTracks()
-      .forEach((track) => myPeerConnection.addTrack(track, myStream));
+    if (nickname === 'admin'){
+        myPeerConnection.addEventListener("addstream", (event) => {
+            handleAddStream(event, remoteSocketId, remoteNickname);
+        });
+        myStream
+          .getTracks()
+          .forEach((track) => myPeerConnection.addTrack(track, myStream));
+    }
+    else if (remoteNickname === 'admin'){
+        myPeerConnection.addEventListener("addstream", (event) => {
+            handleAddStream(event, remoteSocketId, remoteNickname);
+        });
+        myStream
+          .getTracks()
+          .forEach((track) => myPeerConnection.addTrack(track, myStream));
+    }
+
     
     pcObj[remoteSocketId] = myPeerConnection;
 
