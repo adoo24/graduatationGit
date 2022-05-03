@@ -9,6 +9,7 @@ localStorage.clear();
 var imageArr;
 
 const formdata = new FormData();
+// formdata.append('key', new Blob([JSON.stringify(item)] , {type: "application/json"}));
 
 image.onchange = () =>{
     const selectedImage = [...image.files];
@@ -39,6 +40,7 @@ function faceRegister() {
     formdata.append('images', file);
     file = document.getElementById('face-image').files[1];
     formdata.append('images', file);
+    console.log(formdata);
 
     fetch("/face-register",{
         method :"POST",

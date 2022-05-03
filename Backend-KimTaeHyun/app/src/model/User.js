@@ -3,34 +3,38 @@
 const UserStorage = require("./UserStorage");
 
 class User{
-    constructor(body,file = undefined) {
-        this.body = body;
-        this.file = file;
+    constructor(req) {
+        this.body = req.body;
+        this.session = req.session;
+        this.file = req.file;
     }
 
     async login(){
         const client= this.body;
-        const {id,psword} = await UserStorage.getUserInfo(client.id);
-        if(id){
+        const session = this.session
+        try {
+            const {id,psword} = await UserStorage.getUserInfo(client.id);
+        } catch(error) {
+            return {success: false, msg: "아이디 혹은 비밀번호가 틀렸습니다."};
+        }
+        if (session.user) {
+            console.log('이미 로그인되어 미팅룸 페이지로 이동');
+            return {success: true};
+        }
+        else if(id){
             if (id === client.id && psword === client.psword){
                 return { success: true};
             }
-            return {success: false, msg: "비밀번호가 틀렸습니다."};
+            return {success: false, msg: "아이디 혹은 비밀번호가 틀렸습니다."};
         }
-        return {success: false, msg: "존재하지 않는 학번입니다."};
+
     }
 
     async register() {
         const client = this.body;
-        const file = this.file;
         const response = await UserStorage.save(client);
         return response;
     }
-
-    upload() {
-
-    }
-
 
 }
 

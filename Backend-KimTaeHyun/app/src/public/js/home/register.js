@@ -23,7 +23,6 @@ function register() {
         dept : dept.value,
     };
     localStorage.setItem('items',JSON.stringify(req));
-    console.log(req);
     location.href = "/face-register";
     // console.log(JSON.stringify(req));
     // fetch("/register", {

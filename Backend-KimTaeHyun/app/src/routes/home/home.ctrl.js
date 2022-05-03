@@ -10,6 +10,9 @@ const output = {
         res.render("home/index");
     },
     login: (req, res) => {
+        if (req.session.user){
+            res.redirect('home/rooms')
+        } else
         res.render("home/login");
     },
     register: (req,res) =>{
@@ -20,20 +23,21 @@ const output = {
     }
 }
 
+var info;
 const process = {
     login: async (req, res) => {
-        const user = new User(req.body);
+        const user = new User(req);
         const response = await user.login();
         return res.json(response);
     },
     register: async (req, res) => {
-        // const user = new User(req.body);
-        // const response = await user.register();
-        // return res.json(response);
+        const user = new User(req.body);
+        info = req.body;
+        const response = await user.register();
+        return res.json(response);
     },
-    upload: async (req,res) => {
-        // console.log(req.files);
-        // return res.json({success:true});
+    upload: (req,res) => {
+        const imageUpload = new ImageUpload(info, req.files);
     }
 }
 

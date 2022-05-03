@@ -8,12 +8,14 @@ class UserStorage {
 
     }
 
-    static getUserInfo(id) {
+    static async getUserInfo(id) {
         return new Promise((resolve, reject) => {
             db.query("select * from student where id = ?", [id], (err, data) => {
-                if (err) reject(`${err}`);
-                resolve({id: data[0].id, psword: data[0].password});
-                console.log({id: data[0].id, psword: data[0].password});
+                if (err === null|| data === []) reject(`${err}`);
+                else{
+                    resolve({id: data[0].id, psword: data[0].password});
+                    console.log({id: data[0].id, psword: data[0].password});
+                }
             })
         })
     }
