@@ -16,11 +16,6 @@ const upload = multer({
 
 module.exports = upload;
 
-// router.post("/face-register", upload.array('faces'), (req,res) =>{
-//     res.json(req.file)
-//     console.log(req.file)
-// });
-
 
 
 
