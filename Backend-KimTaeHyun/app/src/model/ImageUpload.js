@@ -8,7 +8,7 @@ class User{
         this.file = files;
     }
 
-    async register() {
+    async register() { //UserStorage의 save 호출하여 저장
         const info = this.body;
         const file = this.file;
         const upload = {
