@@ -2,6 +2,7 @@
 
 const UserStorage = require("../../model/UserStorage");
 const User = require("../../model/User");
+const ImageUpload = require("../../model/ImageUpload")
 const multer = require("multer");
 const upload = multer({dest: "images/"});
 
@@ -31,13 +32,14 @@ const process = {
         return res.json(response);
     },
     register: async (req, res) => {
-        const user = new User(req.body);
         info = req.body;
-        const response = await user.register();
-        return res.json(response);
+        return {success: true};
     },
     upload: (req,res) => {
+        console.log(req.files);
         const imageUpload = new ImageUpload(info, req.files);
+        const response = imageUpload.register();
+        return res.json(response);
     }
 }
 
