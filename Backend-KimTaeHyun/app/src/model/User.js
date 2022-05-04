@@ -14,7 +14,7 @@ class User{
         const session = this.session
         try {
             const {id,psword} = await UserStorage.getUserInfo(client.id);
-        } catch(error) {
+        } catch(error) { //아이디가 db에 없을 때
             return {success: false, msg: "아이디 혹은 비밀번호가 틀렸습니다."};
         }
         if (session.user) {
