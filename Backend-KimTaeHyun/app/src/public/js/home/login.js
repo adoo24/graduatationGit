@@ -22,7 +22,7 @@ function login() {
     }).then((res) => res.json())
         .then((res) => {
             if (res.success){
-                location.href = "home/rooms"
+                location.href = "http://localhost:5000/"
             } else{
                 alert(res.msg);
             }

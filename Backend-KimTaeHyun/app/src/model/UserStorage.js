@@ -11,7 +11,9 @@ class UserStorage {
     static async getUserInfo(id) { //id가 db에 조회가 안되는 경우, 에러가 난 경우 제외하고 db에서 아이디,비번을 빼옴
         return new Promise((resolve, reject) => {
             db.query("select * from student where id = ?", [id], (err, data) => {
-                if (err === null|| data === []) reject(`${err}`);
+                console.log(err);
+                console.log(data);
+                if (data === []) reject(`${err}`);
                 else{
                     resolve({id: data[0].id, psword: data[0].password});
                     console.log({id: data[0].id, psword: data[0].password});
