@@ -6,10 +6,15 @@ const app = express();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
+var cons = require('consolidate')
+
 
 //앱 세팅
 app.set("views", "./src/views");
-app.set("view engine", "ejs");
+app.engine('ejs', cons.ejs);
+app.engine('pug', cons.pug);
+app.set('view engine', 'pug')
+
 app.use(express.static(`${__dirname}/src/public`))//미들웨어 등록
 app.use(bodyParser.json());
 // URL을 통해 전달되는 데이터에 한글, 공백 등과 같은 문자가 포함될 경우 제대로 인식되지 않는 문제 해결

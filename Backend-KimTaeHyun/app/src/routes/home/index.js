@@ -10,6 +10,7 @@ router.get("/", ctrl.output.home);
 router.get("/login", ctrl.output.login);
 router.get("/register", ctrl.output.register);
 router.get("/face-register", ctrl.output.upload);
+router.get("/rooms", ctrl.output.rooms);
 
 router.post("/login", ctrl.process.login);
 router.post("/register",  ctrl.process.register);
