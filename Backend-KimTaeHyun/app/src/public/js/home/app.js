@@ -360,3 +360,4 @@ function paintPeerFace(peerStream, id, remoteNickname){
     div.appendChild(nicknameContainer);
     streams.appendChild(div);
 }
+

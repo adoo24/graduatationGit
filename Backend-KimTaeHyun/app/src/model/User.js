@@ -36,16 +36,11 @@ class User{
 
     }
 
-    // async register() {
-    //     const client = this.body;
-    //     const file = this.file
-    //     const files = {
-    //         file1 : file[0],
-    //         file2 : file[1],
-    //     }
-    //     const response = await UserStorage.save(client, files);
-    //     return response;
-    // }
+    async register() {
+        const client = this.body;
+        const response = await UserStorage.save(client);
+        return response;
+    }
 
 }
 

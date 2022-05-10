@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noom </title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+</head>
+
+<body>
+<header>
+    <h1>감독을 부탁해 </h1>
+</header>
+<main>
+    <div id="welcome">
+        <form><input id="roomName" placeholder="room name" required type="text"><input id="nickname" placeholder="nickname" required type="text"><button>Enter room</button></form>
+        <h4>Open Rooms:</h4>
+        <ul></ul>
+    </div>
+    <div id="call">
+        <div id="streams">
+            <div id="myStream"><video id="myFace" autoplay playsinline width="400" height="400"></video>
+                <h3 id="userNickname"></h3><button id="mute">Mute</button><button id="camera">Turn Camera Off</button><button id="leave">Leave</button><select id="cameras"></select>
+            </div>
+        </div>
+        <div id="chatRoom">
+            <ul id="chatBox"></ul>
+            <form id="chatForm"><input placeholder="Write chat" required type="text"><button>Send</button></form>
+        </div>
+    </div>
+</main>
+<script src="/socket.io/socket.io.js"> </script>
+<script src="/public/js/app.js"></script>
+</body>
+
+</html>

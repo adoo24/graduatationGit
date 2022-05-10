@@ -7,6 +7,7 @@ const id  = document.querySelector("#id"),
     dept = document.querySelector("#dept"),
     registerBtn = document.querySelector("#button");
 
+
 registerBtn.addEventListener("click", register);
 
 function register() {
@@ -16,11 +17,20 @@ function register() {
         return alert("비밀번호가 일치하지 않습니다.");
     }
     if (!dept.value) return alert("학과를 입력해 주십시오.");
+
+    var author;
+    if(document.getElementById('학생').checked) {
+        author = "student";
+    }else if(document.getElementById('교수').checked) {
+        author = "professor";
+    }
+
     const req = {
         id: id.value,
         name: name.value,
         psword: psword.value,
         dept : dept.value,
+        authority : author,
     };
     localStorage.setItem('items',JSON.stringify(req));
     location.href = "/face-register";
