@@ -4,7 +4,10 @@ const UserStorage = require("../../model/UserStorage");
 const User = require("../../model/User");
 const ImageUpload = require("../../model/ImageUpload")
 const multer = require("multer");
+const http = require("http");
+const SocketIO = require("socket.io");
 const upload = multer({dest: "images/"});
+const wsServer = require("../../../app")
 
 const output = {
     home: (req, res) => {
@@ -22,6 +25,10 @@ const output = {
     },
     upload: (req,res) =>{
         res.render("home/face-register");
+    },
+    rooms: (req,res) =>{
+        res.render("home/rooms");
+
     }
 }
 
@@ -34,6 +41,9 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
     },
     register: async (req, res) => { //하는 일 없이 그저 upload로 req.body(이름,비번,학과 같은 text user info들) 넘겨주는 용도
         info = req.body;
+        if (req.body.authority === "professor"){
+
+        }
         return {success: true};
     },
     upload: (req,res) => { //실질적인 회원등록.
@@ -41,6 +51,120 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
         const imageUpload = new ImageUpload(info, req.files); //유저정보, 유저얼굴사진 정보 함께 보냄
         const response = imageUpload.register(); //db에 저장
         return res.json(response); //성공/실패
+    },
+    rooms: (req,res) => {
+        console.log("kd");
+        let roomObj = [
+            // {
+            //     roomName,
+            //     currentCount,
+            //     users: [
+            //         {
+            //             socketId,
+            //             nickname
+            //         },
+            //     ],
+            // },
+        ];
+
+        function publicRooms(){
+            const publicRooms = [];
+            for (let i = 0; i < roomObj.length; ++i){
+                publicRooms.push(roomObj[i].roomName);
+            }
+            return publicRooms;
+        }
+
+        function publicRoomCount(){
+            const publicRoomCount = [];
+            for (let i = 0; i < roomObj.length; ++i){
+                publicRoomCount.push(roomObj[i].currentCount);
+            }
+            return publicRoomCount;
+        }
+
+        wsServer.on("connection", (socket) => {
+            console.log("kd");
+            let myRoomName = null;
+            let myNickname = null;
+            wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
+
+            socket.on("join_room", (roomName, nickname) => {
+                myRoomName = roomName;
+                myNickname = nickname;
+
+                let isRoomExist = false;
+                let targetRoom = null;
+
+                for (let i = 0; i < roomObj.length; ++i){
+                    if(roomObj[i].roomName === roomName){
+                        isRoomExist = true;
+                        targetRoom = roomObj[i];
+                        break;
+                    }
+                }
+
+                if(!isRoomExist){
+                    targetRoom = {
+                        roomName,
+                        currentCount: 0,
+                        users: [],
+                    };
+                    roomObj.push(targetRoom);
+                }
+
+                targetRoom.users.push({
+                    socketId: socket.id,
+                    nickname,
+                });
+                ++targetRoom.currentCount;
+
+                socket.join(roomName);
+                socket.emit("welcome", targetRoom.users);
+                wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
+
+            });
+            socket.on("offer", (offer, remoteSocketId, localNickname) => {
+                socket.to(remoteSocketId).emit("offer", offer, socket.id, localNickname);
+            });
+            socket.on("answer", (answer, remoteSocketId) => {
+                socket.to(remoteSocketId).emit("answer", answer, socket.id);
+            });
+            socket.on("ice", (ice, remoteSocketId) => {
+                socket.to(remoteSocketId).emit("ice", ice, socket.id);
+            });
+            socket.on("chat", (message, roomName) => {
+                socket.to(roomName).emit("chat", message);
+            });
+            socket.on("disconnecting", () => {
+                socket.to(myRoomName).emit("leave_room", socket.id, myNickname);
+
+                let isRoomEmpty = false;
+                for (let i = 0; i < roomObj.length; ++i){
+                    if(roomObj[i].roomName === myRoomName){
+                        const newUsers = roomObj[i].users.filter(
+                            (user) => user.socketId != socket.id
+                        );
+                        roomObj[i].users = newUsers;
+                        --roomObj[i].currentCount;
+
+                        if(roomObj[i].currentCount == 0){
+                            isRoomEmpty = true;
+                        }
+                    }
+                }
+                if (isRoomEmpty){
+                    const newRoomObj = roomObj.filter(
+                        (roomObj) => roomObj.currentCount != 0
+                    );
+                    roomObj = newRoomObj;
+                }
+
+            });
+            socket.on("disconnect", () => {
+                wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
+            });
+        });
     }
 }
 
