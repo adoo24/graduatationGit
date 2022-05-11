@@ -2,7 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="835868af-2d35-4a9e-bc99-a12c7d9ae458" name="Changes" comment="&quot;package.json 충돌 해결&quot;">
+      <change afterPath="$PROJECT_DIR$/JunmoWorking/src/views/home.ejs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/김준모/peerToPeer.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JunmoWorking/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/JunmoWorking/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JunmoWorking/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/JunmoWorking/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JunmoWorking/src/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/JunmoWorking/src/public/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JunmoWorking/src/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/JunmoWorking/src/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JunmoWorking/src/views/home.pug" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +79,8 @@
       <workItem from="1651661205392" duration="7224000" />
       <workItem from="1651905290332" duration="11543000" />
       <workItem from="1652179156243" duration="9035000" />
-      <workItem from="1652191450955" duration="1746000" />
+      <workItem from="1652191450955" duration="2028000" />
+      <workItem from="1652240169302" duration="916000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;package.json 충돌 해결&quot;">
       <created>1652191052369</created>

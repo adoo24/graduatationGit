@@ -68,7 +68,7 @@ async function getMedia(deviceId){
     }
 }
 
-// 뮤트
+// 뮤트 기능
 
 function handleMuteClick() {
     myStream.getAudioTracks().forEach((track) => (track.enabled = !track.enabled));
@@ -81,7 +81,7 @@ function handleMuteClick() {
     }
 }
 
-// 카메라 껐다 켰다
+// 카메라를 껐다 켰다
 
 function handleCameraClick() {
     myStream.getVideoTracks().forEach((track) => (track.enabled = !track.enabled));
@@ -95,7 +95,7 @@ function handleCameraClick() {
     }
 }
 
-// 카메라 변환
+// 카메라를 변환하는 함수
 
 async function handleCameraChange(){
     await getMedia(cameraSelect.value);
@@ -117,16 +117,17 @@ cameraSelect.addEventListener("input", handleCameraChange);
 const chatForm = document.querySelector("#chatForm");
 const chatBox = document.querySelector("#chatBox");
 
-
-function handleChatSubmit(event){
+// 채팅 함수
+function handleChatSubmit(event){  
     event.preventDefault();
     const chatInput = chatForm.querySelector("input");
     const message = chatInput.value;
     chatInput.value = "";
-    socket.emit("chat", `${nickname}: ${message}`, roomName);
-    writeChat(`You: ${message}`);
+    socket.emit("chat", `${nickname}: ${message}`, roomName);   // 서버측으로 chat을 emit한다. 
+    writeChat(`You: ${message}`);   // 내가 쓴 chat을 작성한다.
 }
 
+// 메세지를 출력하는 함수
 function writeChat(message){
     const li = document.createElement("li");
     li.innerText = message;
@@ -140,7 +141,7 @@ chatForm.addEventListener("submit", handleChatSubmit);
 const welcome = document.getElementById("welcome");
 const welcomeForm = welcome.querySelector("form");
 
-// 방에들어가면
+// 방에들어가면 실행 welcome을 hidden해주고 call을 보여준다.
 
 async function initCall() {
     welcome.hidden = true;
@@ -148,20 +149,19 @@ async function initCall() {
     await getMedia();
 }
   
-
+// join버튼을 누른 경우 실행되는 함수
 
 async function handleWelcomeSubmit(event) {
     event.preventDefault();
     const inputRoomName = welcomeForm.querySelector("#roomName");
     const inputNickname = welcomeForm.querySelector("#nickname");
     const nicknameContainer = document.querySelector("#userNickname");
-    roomName = inputRoomName.value;
+    roomName = inputRoomName.value; // 내가 입력한 roomName
     inputRoomName.value = "";
-    nickname = inputNickname.value;
+    nickname = inputNickname.value; // 내가 입력한 nickname
     inputNickname.value = "";
     nicknameContainer.innerText = nickname;
-    socket.emit("join_room", roomName, nickname);
-
+    socket.emit("join_room", roomName, nickname);   // 서버 측으로 내가 입력한 roomName과 nickname을 매개변수로 하는 join_room을 emit한다.
 }
 
 welcomeForm.addEventListener("submit", handleWelcomeSubmit);
@@ -170,6 +170,7 @@ welcomeForm.addEventListener("submit", handleWelcomeSubmit);
 
 const leaveBtn = document.querySelector("#leave");
 
+// 방을 나가는 함수
 function leaveRoom(){
     socket.disconnect();
 
@@ -187,9 +188,10 @@ function leaveRoom(){
     myFace.srcObject = null;
     clearAllVideos();
     clearAllChat();
-    document.location.reload();
+    document.location.reload(); // 화면을 새로고침하여 준다.
 }
 
+// 나간 사람의 비디오를 없애는 함수
 function removeVideo(leaveSocktId){
     const streams = document.querySelector("#streams");
     const streamArr = streams.querySelectorAll("div");
@@ -200,6 +202,7 @@ function removeVideo(leaveSocktId){
     });
 }
 
+// 다른 사람들의 비디오를 없애는 함수
 function clearAllVideos(){
     const streams = document.querySelector("#streams");
     const streamArr = streams.querySelectorAll("div");
@@ -210,6 +213,7 @@ function clearAllVideos(){
     });
 }
 
+// 챗을 지우는 함수
 function clearAllChat(){
     const chatArr = chatBox.querySelectorAll("li");
     chatArr.forEach((chat) => chatBox.removeChild(chat));
@@ -220,61 +224,62 @@ leaveBtn.addEventListener("click", leaveRoom);
 
 // Socket Code
 
-socket.on("welcome", async (userObj) => {
+socket.on("welcome", async (userObj) => { // 서버측에서 welcome이 emit된 경우
     await initCall();
     
     const length = userObj.length;
-    if (length === 1){
+    if (length === 1){  // 방에 혼자밖에 없으면 return한다.
         return;
     }
     for (let i = 0 ; i < length - 1; ++i){
         try{
-            const newPC = makeConnection(
+            const newPC = makeConnection(   // 방의 다른 모든 유저들에 대하여 각각 makeConnection한다.
                 userObj[i].socketId,
                 userObj[i].nickname
             );
-            const offer = await newPC.createOffer();
-            await newPC.setLocalDescription(offer);
-            socket.emit("offer", offer, userObj[i].socketId, nickname);
+            const offer = await newPC.createOffer();    // offer을 생성한다.
+            await newPC.setLocalDescription(offer);     // offer을 LocalDescription에 등록한다.
+            socket.emit("offer", offer, userObj[i].socketId, nickname); // 서버측에 상대의 소켓id와 본인의 닉네임을 매개변수로 offer을 emit한다.
         } catch (err){
             console.error(err);
         }
     }
 });
 
+// 서버측에서 offer이 emit된 경우 실행한다.
 socket.on("offer", async(offer, remoteSocketId, remoteNickname) => {
     try{
-        const newPC = makeConnection(remoteSocketId, remoteNickname);
-        await newPC.setRemoteDescription(offer);
-        const answer = await newPC.createAnswer();
-        await newPC.setLocalDescription(answer);
-        socket.emit("answer", answer, remoteSocketId);
+        const newPC = makeConnection(remoteSocketId, remoteNickname);   // 상대와 makeConnection해준다.
+        await newPC.setRemoteDescription(offer);    // 받아들인 offer을 RemoteDescription에 등록한다.
+        const answer = await newPC.createAnswer();  // answer을 생성한다.
+        await newPC.setLocalDescription(answer);    // answer을 LocalDescription에 등록한다.
+        socket.emit("answer", answer, remoteSocketId);  // answer을 서버측에 emit한다.
         writeChat(`${remoteNickname} joined the room`);
     } catch (err){
         console.error(err);
     }
 });
 
-socket.on("answer", async (answer, remoteSocketId) => {
-    await pcObj[remoteSocketId].setRemoteDescription(answer);
+socket.on("answer", async (answer, remoteSocketId) => { // 서버측에서 answer이 emit된 경우
+    await pcObj[remoteSocketId].setRemoteDescription(answer);   // 받은 answer을 RemoteDescription에 등록한다.
 });
 
-socket.on("ice", async (ice, remoteSocketId) => { // ice 교환
+socket.on("ice", async (ice, remoteSocketId) => { // ice가 emit된 경우
     await pcObj[remoteSocketId].addIceCandidate(ice);
 });
 
-socket.on("chat", (message) => {
+socket.on("chat", (message) => {    // chat이 emit된 경우 writechat을 한다.
     writeChat(message);
 });
 
-socket.on("leave_room", (leaveSocktId, nickname) => {
-    removeVideo(leaveSocktId);
+socket.on("leave_room", (leaveSocktId, nickname) => {   // leave_room이 emit된 경우 
+    removeVideo(leaveSocktId);  // 해당 인물의 비디오를 지우고 나갔다는 메세지를 출력한다.
     writeChat(`${nickname} leaved the room`);
     --peopleInRoom;
     
 })
 
-socket.on("room_change", (rooms, roomCount) => {
+socket.on("room_change", (rooms, roomCount) => {    // room_change가 emit된 경우 방의 목록과 인원을 출력한다.
     const roomList = welcome.querySelector("ul");
     roomList.innerHTML = "";
     if(rooms.length === 0){
@@ -306,21 +311,21 @@ function makeConnection(remoteSocketId, remoteNickname) {
     myPeerConnection.addEventListener("icecandidate", (event) => {
         handleIce(event, remoteSocketId);
     });
-    if (nickname === 'admin'){
+    if (nickname === 'admin'){  // 만약 본인이 관리자라면 
         myPeerConnection.addEventListener("addstream", (event) => {
-            handleAddStream(event, remoteSocketId, remoteNickname);
+            handleAddStream(event, remoteSocketId, remoteNickname); // 상대의 stream을 출력하고
         });
         myStream
           .getTracks()
-          .forEach((track) => myPeerConnection.addTrack(track, myStream));
+          .forEach((track) => myPeerConnection.addTrack(track, myStream));  // 본인의 stream을 상대에게 전송한다.
     }
-    else if (remoteNickname === 'admin'){
-        myPeerConnection.addEventListener("addstream", (event) => {
+    else if (remoteNickname === 'admin'){   // 만약 본인이 관리자가 아니고 상대가 관리자라면
+        myPeerConnection.addEventListener("addstream", (event) => { // 상대의 stream을 출력하고
             handleAddStream(event, remoteSocketId, remoteNickname);
         });
         myStream
           .getTracks()
-          .forEach((track) => myPeerConnection.addTrack(track, myStream));
+          .forEach((track) => myPeerConnection.addTrack(track, myStream));  // 본인의 stream을 상대에게 전송한다.
     }
 
     
@@ -333,13 +338,13 @@ function makeConnection(remoteSocketId, remoteNickname) {
   
 function handleIce(event, remoteSocketId){
     if (event.candidate){
-        socket.emit("ice", event.candidate, remoteSocketId);
+        socket.emit("ice", event.candidate, remoteSocketId);    // 서버 측으로 ice를 emit한다.
     }
 }
 
-function handleAddStream(event, remoteSocketId, remoteNickname){
+function handleAddStream(event, remoteSocketId, remoteNickname){    // stream을 화면에 출력한다.
     const peerStream = event.stream;
-    paintPeerFace(peerStream, remoteSocketId, remoteNickname);
+    paintPeerFace(peerStream, remoteSocketId, remoteNickname);  
 }
 
 function paintPeerFace(peerStream, id, remoteNickname){

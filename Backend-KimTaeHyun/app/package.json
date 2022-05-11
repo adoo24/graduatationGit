@@ -1,12 +1,22 @@
 {
   "dependencies": {
     "body-parser": "^1.20.0",
+<<<<<<< HEAD
     "consolidate": "^0.16.0",
     "ejs": "^3.1.6",
     "express": "^4.17.3",
     "multer": "^1.4.4",
     "mysql": "^2.18.1",
     "pug": "^3.0.2",
+=======
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.7",
+    "express": "^4.18.1",
+    "express-session": "^1.17.2",
+    "multer": "^1.4.4",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.16",
+>>>>>>> e0782301595d670173741a3c4c2fcd2cff704efb
     "socket.io": "^4.5.0"
   },
   "name": "login-lecture",
