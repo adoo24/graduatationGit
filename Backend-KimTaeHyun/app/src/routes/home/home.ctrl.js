@@ -30,6 +30,7 @@ const output = {
 }
 
 
+var info;
 
 const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론트로부터 요청이 오면 처리하고 응답을 보냄.
     login: async (req, res) => {
@@ -44,17 +45,20 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
         return res.json(response);
     },
     register: async (req, res) => {
-        // info = req.body;
-        if (req.body.auth == 'professor'){
+        info = req.body;
+        if (req.body.auth == 'professor') {
             const user = new User(req);
             const response = await user.register();
+            return res.json(response)
+        } else{
+            const response = {success: true};
             return res.json(response);
-        } else {
-
         }
-    },
+    }
+    ,
     upload: (req, res) => { //실질적인 회원등록.
         console.log(req.files);
+        console.log(info);
         const imageUpload = new ImageUpload(info, req.files); //유저정보, 유저얼굴사진 정보 함께 보냄
         const response =  imageUpload.register(); //db에 저장
         return res.json(response); //성공/실패
