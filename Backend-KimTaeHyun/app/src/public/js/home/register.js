@@ -13,7 +13,7 @@ registerBtn.addEventListener("click", register);
 function register() {
     if(!id.value) return alert("학번을 입력해 주십시오.");
     if(!name.value) return alert("이름을 입력해 주십시오.");
-    if (psword.value !== confirmPsword.value){
+    if (!psword.value || psword.value !== confirmPsword.value){
         return alert("비밀번호가 일치하지 않습니다.");
     }
     if (!dept.value) return alert("학과를 입력해 주십시오.");
@@ -30,11 +30,11 @@ function register() {
         name: name.value,
         psword: psword.value,
         dept : dept.value,
-        authority : author,
+        auth : author,
     };
     localStorage.setItem('items',JSON.stringify(req));
-    location.href = "/face-register";
     console.log(JSON.stringify(req));
+
     fetch("/register", {
         method: "POST",
         headers: {
@@ -44,7 +44,11 @@ function register() {
     }).then((res) => res.json())
         .then((res) => {
             if (res.success){
-                location.href = "/face-register"
+                if(req.auth === "student") {
+                    location.href = "/face-register"
+                }else {
+                    location.href = "/login"
+                }
             } else{
                 alert(res.msg);
             }

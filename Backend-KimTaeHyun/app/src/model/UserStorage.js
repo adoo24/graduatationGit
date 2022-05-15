@@ -8,20 +8,35 @@ class UserStorage {
 
     }
 
-    static async getUserInfo(id) { //id가 db에 조회가 안되는 경우, 에러가 난 경우 제외하고 db에서 아이디,비번을 빼옴
+    static async getUser(id) { //id가 db에 조회가 안되는 경우, 에러가 난 경우 제외하고 db에서 아이디,비번을 빼옴
         return new Promise((resolve, reject) => {
             db.query("select * from student where id = ?", [id], (err, data) => {
-                if (data === []) reject(`${err}`);
+                if (data.length === 0){
+                    db.query("select * from professor where id = ?", [id], (err,data) =>{
+                        if (data.length === 0) {
+                            reject(`${err}`);
+                        }
+                        else{
+                            console.log("3")
+                            resolve({id: data[0].id, psword: data[0].password,
+                                nickname : data[0].name, auth : "professor"});
+                            console.log({id: data[0].id, psword: data[0].password,
+                                nickname: data[0].name, auth: "professor"});
+                        }
+                    })
+                }
                 else{
-                    resolve({id: data[0].id, psword: data[0].password});
-                    console.log({id: data[0].id, psword: data[0].password});
+                    resolve({id: data[0].id, psword: data[0].password,
+                            nickname : data[0].name, auth: "student"});
+                    console.log({id: data[0].id, psword: data[0].password,
+                        nickname: data[0].name, auth: "student"});
                 }
             })
         })
     }
 
     static async save(userInfo, files = null) { //회원정보,사진경로를 db에 저장. 저장 시 성공, 에러시 실패
-        if (userInfo.authority === "student") {
+        if (userInfo.auth === "student") {
             return new Promise((resolve, reject) => {
                 db.query("insert into student (id,name,password,dept,face1,face2) values(?, ?, ?, ?, ?, ?);",
                     [userInfo.id, userInfo.name, userInfo.psword, userInfo.dept, files.file1.path, files.file2.path]
