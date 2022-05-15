@@ -151,6 +151,7 @@ async function initCall() {
 
 
 async function handleWelcomeSubmit(event) {
+    console.log("hi");
     event.preventDefault();
     const inputRoomName = welcomeForm.querySelector("#roomName");
     const inputNickname = welcomeForm.querySelector("#nickname");
@@ -161,7 +162,6 @@ async function handleWelcomeSubmit(event) {
     inputNickname.value = "";
     nicknameContainer.innerText = nickname;
     socket.emit("join_room", roomName, nickname);
-
 }
 
 welcomeForm.addEventListener("submit", handleWelcomeSubmit);

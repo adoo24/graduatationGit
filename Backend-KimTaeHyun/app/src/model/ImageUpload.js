@@ -14,7 +14,7 @@ class User{
         const upload = {
                     file1 : file[0],
                     file2 : file[1],
-                }
+                };
         const response = await UserStorage.save(info, upload);
         return response;
     }
