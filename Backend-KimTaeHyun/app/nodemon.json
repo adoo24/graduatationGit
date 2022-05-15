@@ -1,0 +1,4 @@
+{
+    "ignore": ["sessions/"],
+    "watch": ["src/", "app.js"]
+}
