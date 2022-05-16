@@ -54,7 +54,7 @@ async function getMedia(deviceId){
     };
     const cameraConstraints = {
         audio: true,
-        video: { deviceId: { exact: deviceId} },
+        video: { deviceId: deviceId },
     };
     try{
         myStream = await navigator.mediaDevices.getUserMedia(
@@ -241,16 +241,16 @@ socket.on("welcome", async (userObj) => {
             );
             const offer = await newPC.createOffer();
             await newPC.setLocalDescription(offer);
-            socket.emit("offer", offer, userObj[i].socketId, nickname);
+            socket.emit("offer", offer, userObj[i].socketId, nickname, auth);
         } catch (err){
             console.error(err);
         }
     }
 });
 
-socket.on("offer", async(offer, remoteSocketId, remoteNickname) => {
+socket.on("offer", async(offer, remoteSocketId, remoteNickname, remoteAuth) => {
     try{
-        const newPC = makeConnection(remoteSocketId, remoteNickname);
+        const newPC = makeConnection(remoteSocketId, remoteNickname, remoteAuth);
         await newPC.setRemoteDescription(offer);
         const answer = await newPC.createAnswer();
         await newPC.setLocalDescription(answer);
@@ -313,6 +313,8 @@ function makeConnection(remoteSocketId, remoteNickname, remoteAuth) {
         handleIce(event, remoteSocketId);
     });
     console.log(auth);
+    console.log("------");
+    console.log(remoteAuth);
     if (auth === 'professor'){
         console.log("123123");
         myPeerConnection.addEventListener("addstream", (event) => {

@@ -113,8 +113,8 @@ wsServer.on("connection", (socket) => {
         wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
 
     });
-    socket.on("offer", (offer, remoteSocketId, localNickname) => {
-        socket.to(remoteSocketId).emit("offer", offer, socket.id, localNickname);
+    socket.on("offer", (offer, remoteSocketId, localNickname, localAuth) => {
+        socket.to(remoteSocketId).emit("offer", offer, socket.id, localNickname, localAuth);
     });
     socket.on("answer", (answer, remoteSocketId) => {
         socket.to(remoteSocketId).emit("answer", answer, socket.id);
