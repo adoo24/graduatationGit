@@ -37,7 +37,6 @@ const httpServer = http.createServer(app);
 const wsServer = SocketIO(httpServer);
 
 app.get('/rooms', (req, res) =>{
-    console.log(req.session);
     tmpid = req.session.uid;
     tmpauth = req.session.auth;
     tmpname = req.session.nickname;
@@ -75,16 +74,13 @@ function publicRoomCount(){
 
 wsServer.on("connection", (socket) => {
     let myRoomName = null;
-    let myNickname = null;
+    let myNickname = tmpname;
     let myId = tmpid;
     let myAuth = tmpauth;
     wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
 
-    socket.on("join_room", (roomName, nickname) => {
+    socket.on("join_room", (roomName) => {
         myRoomName = roomName;
-        myNickname = nickname;
-        console.log(myId);
-        console.log(myAuth);
         let isRoomExist = false;
         let targetRoom = null;
         for (let i = 0; i < roomObj.length; ++i){
@@ -106,11 +102,13 @@ wsServer.on("connection", (socket) => {
 
         targetRoom.users.push({
             socketId: socket.id,
-            nickname,
+            myNickname,
+            myAuth
         });
         ++targetRoom.currentCount;
 
         socket.join(roomName);
+        socket.emit("info", myId, myNickname, myAuth);
         socket.emit("welcome", targetRoom.users);
         wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
 
