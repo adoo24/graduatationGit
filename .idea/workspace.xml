@@ -2,17 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="835868af-2d35-4a9e-bc99-a12c7d9ae458" name="Changes" comment="&quot;package.json 충돌 해결&quot;">
-      <change afterPath="$PROJECT_DIR$/JunmoWorking/src/views/home.ejs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/김준모/peerToPeer.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JunmoWorking/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/JunmoWorking/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JunmoWorking/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/JunmoWorking/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JunmoWorking/src/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/JunmoWorking/src/public/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JunmoWorking/src/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/JunmoWorking/src/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JunmoWorking/src/views/home.pug" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/BU4NAejijiHbj7ILx15RVSPx0aVG-HN1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/atJrYlqNaOhDM9HyyI8ORvFX4NZJ8fBB.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +43,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="javascript.nodejs.core.library.configured.version" value="16.14.2" />
     <property name="javascript.nodejs.core.library.typings.version" value="16.11.33" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/views/home" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="watcher.settings" />
     <property name="vue.rearranger.settings.migration" value="true" />
@@ -81,6 +73,11 @@
       <workItem from="1652179156243" duration="9035000" />
       <workItem from="1652191450955" duration="2028000" />
       <workItem from="1652240169302" duration="1345000" />
+      <workItem from="1652252032968" duration="377000" />
+      <workItem from="1652252523599" duration="21711000" />
+      <workItem from="1652622161445" duration="2883000" />
+      <workItem from="1652626596176" duration="3211000" />
+      <workItem from="1652782572226" duration="2368000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;package.json 충돌 해결&quot;">
       <created>1652191052369</created>
