@@ -4,12 +4,14 @@ const myFace = document.getElementById("myFace");
 const muteBtn = document.getElementById("mute");
 const cameraBtn = document.getElementById("camera");
 const cameraSelect = document.getElementById("cameras");
+const captureBtn = document.getElementById("capture");
+const canvas = document.getElementById("canvas");
 
 
 const call = document.getElementById("call");
 
 call.hidden = true;
-
+canvas.hidden = true;
 let myStream;
 let muted = false;
 let cameraOff = false;
@@ -96,6 +98,37 @@ function handleCameraClick() {
         cameraOff = true;
     }
 }
+
+// 캡쳐
+
+const dataURLtoFile = (dataurl, fileName) => {
+ 
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), 
+        n = bstr.length, 
+        u8arr = new Uint8Array(n);
+        
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    
+    return new File([u8arr], fileName, {type:mime});
+}
+
+
+
+
+captureBtn.addEventListener("click", function() {
+    canvas.getContext('2d').drawImage(myFace, 0, 0, canvas.width, canvas.height);
+    let image_data_url = canvas.toDataURL('image/jpeg');
+    var file = dataURLtoFile(image_data_url,'capture.jpg');
+    socket.emit("capture", file);
+});
+
+
+
+
 
 // 카메라 변환
 

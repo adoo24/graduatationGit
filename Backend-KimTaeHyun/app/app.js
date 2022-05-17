@@ -1,6 +1,7 @@
 "use strict";
 
 //모듈
+const fs = require('fs');
 const http = require("http");
 const SocketIO = require("socket.io");
 const express =require('express');
@@ -152,6 +153,9 @@ wsServer.on("connection", (socket) => {
     });
     socket.on("disconnect", () => {
         wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
+    });
+    socket.on("capture", (file) => {
+        fs.writeFile("capture.jpg", file, () => console.log('capture saved'));
     });
 });
 
