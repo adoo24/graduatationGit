@@ -9,6 +9,9 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
 var FileStore = require('session-file-store')(expressSession);
+var tmpid;
+var tmpauth;
+var tmpname;
 
 
 //앱 세팅
@@ -34,7 +37,9 @@ const httpServer = http.createServer(app);
 const wsServer = SocketIO(httpServer);
 
 app.get('/rooms', (req, res) =>{
-    console.log(req.session);
+    tmpid = req.session.uid;
+    tmpauth = req.session.auth;
+    tmpname = req.session.nickname;
     res.render('home/rooms')
 });
 
@@ -69,16 +74,15 @@ function publicRoomCount(){
 
 wsServer.on("connection", (socket) => {
     let myRoomName = null;
-    let myNickname = null;
+    let myNickname = tmpname;
+    let myId = tmpid;
+    let myAuth = tmpauth;
     wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
 
-    socket.on("join_room", (roomName, nickname) => {
+    socket.on("join_room", (roomName) => {
         myRoomName = roomName;
-        myNickname = nickname;
-
         let isRoomExist = false;
         let targetRoom = null;
-
         for (let i = 0; i < roomObj.length; ++i){
             if(roomObj[i].roomName === roomName){
                 isRoomExist = true;
@@ -98,17 +102,19 @@ wsServer.on("connection", (socket) => {
 
         targetRoom.users.push({
             socketId: socket.id,
-            nickname,
+            myNickname,
+            myAuth
         });
         ++targetRoom.currentCount;
 
         socket.join(roomName);
+        socket.emit("info", myId, myNickname, myAuth);
         socket.emit("welcome", targetRoom.users);
         wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
 
     });
-    socket.on("offer", (offer, remoteSocketId, localNickname) => {
-        socket.to(remoteSocketId).emit("offer", offer, socket.id, localNickname);
+    socket.on("offer", (offer, remoteSocketId, localNickname, localAuth) => {
+        socket.to(remoteSocketId).emit("offer", offer, socket.id, localNickname, localAuth);
     });
     socket.on("answer", (answer, remoteSocketId) => {
         socket.to(remoteSocketId).emit("answer", answer, socket.id);

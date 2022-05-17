@@ -17,6 +17,8 @@ let roomName = "";
 let nickname = "";
 let myPeerConnection;
 let peopleInRoom = 1;
+let auth = "";
+let schoolid = "";
 
 let pcObj = {
 
@@ -52,7 +54,7 @@ async function getMedia(deviceId){
     };
     const cameraConstraints = {
         audio: true,
-        video: { deviceId: { exact: deviceId} },
+        video: { deviceId: deviceId },
     };
     try{
         myStream = await navigator.mediaDevices.getUserMedia(
@@ -151,17 +153,11 @@ async function initCall() {
 
 
 async function handleWelcomeSubmit(event) {
-    console.log("hi");
     event.preventDefault();
     const inputRoomName = welcomeForm.querySelector("#roomName");
-    const inputNickname = welcomeForm.querySelector("#nickname");
-    const nicknameContainer = document.querySelector("#userNickname");
     roomName = inputRoomName.value;
     inputRoomName.value = "";
-    nickname = inputNickname.value;
-    inputNickname.value = "";
-    nicknameContainer.innerText = nickname;
-    socket.emit("join_room", roomName, nickname);
+    socket.emit("join_room", roomName);
 }
 
 welcomeForm.addEventListener("submit", handleWelcomeSubmit);
@@ -170,7 +166,7 @@ welcomeForm.addEventListener("submit", handleWelcomeSubmit);
 
 const leaveBtn = document.querySelector("#leave");
 
-function leaveRoom(){
+async function leaveRoom(){
     socket.disconnect();
 
     call.hidden = true;
@@ -179,14 +175,15 @@ function leaveRoom(){
 
     peopleInRoom = 1;
     nickname = "";
-
+    auth = "";
+    schoolid = "";
     myStream.getTracks().forEach((track) => track.stop());
     const nicknameContainer = document.querySelector("#userNickname");
     nicknameContainer.innerText = "";
     
     myFace.srcObject = null;
-    clearAllVideos();
-    clearAllChat();
+    await clearAllVideos();
+    await clearAllChat();
     document.location.reload();
 }
 
@@ -200,7 +197,7 @@ function removeVideo(leaveSocktId){
     });
 }
 
-function clearAllVideos(){
+async function clearAllVideos(){
     const streams = document.querySelector("#streams");
     const streamArr = streams.querySelectorAll("div");
     streamArr.forEach((streamElement) => {
@@ -210,7 +207,7 @@ function clearAllVideos(){
     });
 }
 
-function clearAllChat(){
+async function clearAllChat(){
     const chatArr = chatBox.querySelectorAll("li");
     chatArr.forEach((chat) => chatBox.removeChild(chat));
 }
@@ -220,9 +217,17 @@ leaveBtn.addEventListener("click", leaveRoom);
 
 // Socket Code
 
+socket.on("info", async(myId, myNickname, myAuth) => {
+    schoolid = myId;
+    nickname = myNickname;
+    auth = myAuth;
+    const nicknameContainer = document.querySelector("#userNickname");
+    nicknameContainer.innerText = nickname;
+});
+
+
 socket.on("welcome", async (userObj) => {
     await initCall();
-    
     const length = userObj.length;
     if (length === 1){
         return;
@@ -231,20 +236,21 @@ socket.on("welcome", async (userObj) => {
         try{
             const newPC = makeConnection(
                 userObj[i].socketId,
-                userObj[i].nickname
+                userObj[i].myNickname,
+                userObj[i].myAuth
             );
             const offer = await newPC.createOffer();
             await newPC.setLocalDescription(offer);
-            socket.emit("offer", offer, userObj[i].socketId, nickname);
+            socket.emit("offer", offer, userObj[i].socketId, nickname, auth);
         } catch (err){
             console.error(err);
         }
     }
 });
 
-socket.on("offer", async(offer, remoteSocketId, remoteNickname) => {
+socket.on("offer", async(offer, remoteSocketId, remoteNickname, remoteAuth) => {
     try{
-        const newPC = makeConnection(remoteSocketId, remoteNickname);
+        const newPC = makeConnection(remoteSocketId, remoteNickname, remoteAuth);
         await newPC.setRemoteDescription(offer);
         const answer = await newPC.createAnswer();
         await newPC.setLocalDescription(answer);
@@ -289,7 +295,7 @@ socket.on("room_change", (rooms, roomCount) => {
 
 // RTC Code
 
-function makeConnection(remoteSocketId, remoteNickname) {
+function makeConnection(remoteSocketId, remoteNickname, remoteAuth) {
     myPeerConnection = new RTCPeerConnection({
         iceServers: [
         {
@@ -306,7 +312,11 @@ function makeConnection(remoteSocketId, remoteNickname) {
     myPeerConnection.addEventListener("icecandidate", (event) => {
         handleIce(event, remoteSocketId);
     });
-    if (nickname === 'admin'){
+    console.log(auth);
+    console.log("------");
+    console.log(remoteAuth);
+    if (auth === 'professor'){
+        console.log("123123");
         myPeerConnection.addEventListener("addstream", (event) => {
             handleAddStream(event, remoteSocketId, remoteNickname);
         });
@@ -314,7 +324,8 @@ function makeConnection(remoteSocketId, remoteNickname) {
           .getTracks()
           .forEach((track) => myPeerConnection.addTrack(track, myStream));
     }
-    else if (remoteNickname === 'admin'){
+    else if (remoteAuth === 'professor'){
+        console.log("234234")
         myPeerConnection.addEventListener("addstream", (event) => {
             handleAddStream(event, remoteSocketId, remoteNickname);
         });
