@@ -155,7 +155,7 @@ wsServer.on("connection", (socket) => {
         wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
     });
     socket.on("capture", (file) => {
-        fs.writeFile("capture.jpg", file, () => console.log('capture saved'));
+        fs.writeFile("F:/Graduation-github/graduatationGit/Backend-KimTaeHyun/app/capture/" + tmpid + " " + tmpname + ".jpg", file, (err) => console.log(err));
     });
 });
 
