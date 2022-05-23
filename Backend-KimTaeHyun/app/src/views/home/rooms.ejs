@@ -21,7 +21,7 @@
     </div>
     <div id="call">
         <div id="streams">
-            <div id="myStream"><video id="myFace" autoplay playsinline width="400" height="400"></video><canvas id = "canvas" width="400" height="400"></canvas>
+            <div id="myStream"><video id="myFace" autoplay playsinline width="400" height="400"></video><canvas id = "canvas" width="600" height="400"></canvas>
                 <h3 id="userNickname"></h3><button id="mute">Mute</button><button id="camera">Turn Camera Off</button><button id = "capture">Capture</button><button id="leave">Leave</button><select id="cameras"></select>
             </div>
         </div>
@@ -33,6 +33,7 @@
 </main>
 <script src="/socket.io/socket.io.js"> </script>
 <script src="/js/home/rooms.js"></script>
+<script defer src="/js/home/face-api.min.js"></script>              
 </body>
 
 </html>
