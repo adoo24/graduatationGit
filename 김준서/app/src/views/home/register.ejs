@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+
+    <link rel="stylesheet" href="/css/home/login.css">
+    <script src = "/js/home/register.js" defer></script>
+    <title>Document</title>
+</head>
+<body>
+<div class="login-page">
+    <div class="form">
+        <form class="login-form" enctype="multipart/form-data">
+            <input id = "id" input type="text" placeholder="아이디 (학생의 경우 학번 입력)"/>
+            <input id = "name" input type="text" placeholder="이름"/>
+            <input id = "psword" input type="password" placeholder="비밀번호"/>
+            <input id = "confirm-psword" input type="password" placeholder="비밀번호 확인"/>
+            <input id = "dept" input type="text" placeholder="학과"/>
+            <label><input type="radio" id = "학생" name="authority" value="학생"> 학생</label>
+            <label><input type="radio" id = "교수" name="authority" value="교수"> 교수</label>
+            <p id = "button">다음</p>
+            <p class="message">이미 회원가입 하셨나요? <a href="/login">로그인</a></p>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
+<!-- Copyright (c) 2022 by Aigars Silkalns (https://codepen.io/colorlib/pen/rxddKy) -->
