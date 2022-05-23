@@ -119,11 +119,48 @@ const dataURLtoFile = (dataurl, fileName) => {
 
 
 
-captureBtn.addEventListener("click", function() {
+captureBtn.addEventListener("click", async function() {             
     canvas.getContext('2d').drawImage(myFace, 0, 0, canvas.width, canvas.height);
     let image_data_url = canvas.toDataURL('image/jpeg');
     var file = dataURLtoFile(image_data_url,'capture.jpg');
-    socket.emit("capture", file);
+    Promise.all([
+        socket.emit("capture", file),
+        faceapi.nets.faceRecognitionNet.loadFromUri('js/home/models'), 
+        faceapi.nets.ssdMobilenetv1.loadFromUri('js/home/models'), 
+        faceapi.nets.faceLandmark68Net.loadFromUri('js/home/models'),
+        ])
+    .then(start)
+    async function start() {
+        let image = await faceapi.fetchImage('capture/'+schoolid+' '+nickname+'.jpg')
+        const labeledFaceDescriptors = await loadLabeledImages()
+        const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5)
+        console.log("Model Loaded")
+        const singleResult = await faceapi
+        .detectSingleFace(image)
+        .withFaceLandmarks()
+        .withFaceDescriptor()
+        if (singleResult) {
+            const bestMatch = faceMatcher.findBestMatch(singleResult.descriptor)
+            if (bestMatch.label=="Junseo")              //유동적으로 바뀌게 수정해야함
+                console.log("Correct")
+            else
+                console.log("Not Correct")
+        }
+    }
+    function loadLabeledImages() {
+        const labels = ["Junseo"]
+        return Promise.all(
+        labels.map(async label => {
+            const descriptions = []
+            for (let i = 1; i <= 2; i++) {
+            const img = await faceapi.fetchImage(`https://raw.githubusercontent.com/adoo24/graduatationGit/main/%EA%B9%80%EC%A4%80%EC%84%9C/${i}.png`)
+            const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+            descriptions.push(detections.descriptor)
+            }
+            return new faceapi.LabeledFaceDescriptors(label, descriptions)
+        })
+        )
+    }
 });
 
 
