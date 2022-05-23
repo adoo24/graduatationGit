@@ -133,7 +133,7 @@ captureBtn.addEventListener("click", async function() {
     async function start() {
         let image = await faceapi.fetchImage('capture/'+schoolid+' '+nickname+'.jpg')
         const labeledFaceDescriptors = await loadLabeledImages()
-        const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5)
+        const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.45)
         console.log("Model Loaded")
         const singleResult = await faceapi
         .detectSingleFace(image)
@@ -146,6 +146,9 @@ captureBtn.addEventListener("click", async function() {
             else
                 console.log("Not Correct")
         }
+        else{
+            console.log("아무도 없습니다.")
+        }
     }
     function loadLabeledImages() {
         const labels = ["Junseo"]
@@ -153,7 +156,7 @@ captureBtn.addEventListener("click", async function() {
         labels.map(async label => {
             const descriptions = []
             for (let i = 1; i <= 2; i++) {
-            const img = await faceapi.fetchImage(`https://raw.githubusercontent.com/adoo24/graduatationGit/main/%EA%B9%80%EC%A4%80%EC%84%9C/${i}.png`)
+            const img = await faceapi.fetchImage(`js/home/models/${i}.png`);
             const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
             descriptions.push(detections.descriptor)
             }
