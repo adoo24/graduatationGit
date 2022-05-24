@@ -16,16 +16,22 @@ class User{
         var uPsword;
         var uNickname;
         var uAuth;
+        var uFace1;
+        var uFace2;
         try { //아이디가 db에 있다면 id,psword를 db에서 받아옴
             const info = await UserStorage.getUser(client.id);
             const id = info.id;
             const psword = info.psword;
             const nickname = info.nickname;
             const auth = info.auth;
+            const face1 = info.face1;
+            const face2 = info.face2;
             uId = id;
             uPsword = psword;
             uNickname = nickname;
             uAuth = auth;
+            uFace1 = face1;
+            uFace2 = face2;
         } catch(error) { //아이디가 db에 없을 때
             console.log("에러1")
             return {success: false, msg: "아이디 혹은 비밀번호가 틀렸습니다."};
@@ -36,7 +42,7 @@ class User{
         }
         else if(uId){ //id는 맞는데 비번이 틀린경우
             if (uId === client.id && uPsword === client.psword){
-                return {success: true, id: uId, nickname: uNickname, auth: uAuth };
+                return {success: true, id: uId, nickname: uNickname, auth: uAuth, face1: uFace1, face2: uFace2 };
             }
             return {success: false, msg: "아이디 혹은 비밀번호가 틀렸습니다."};
             console.log("에러2");

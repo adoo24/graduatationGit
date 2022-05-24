@@ -13,6 +13,8 @@ var FileStore = require('session-file-store')(expressSession);
 var tmpid;
 var tmpauth;
 var tmpname;
+var tmpPath1;
+var tmpPath2;
 
 
 //앱 세팅
@@ -41,6 +43,8 @@ app.get('/rooms', (req, res) =>{
     tmpid = req.session.uid;
     tmpauth = req.session.auth;
     tmpname = req.session.nickname;
+    tmpPath1 = req.session.face1;
+    tmpPath2 = req.session.face2;
     res.render('home/rooms')
 });
 
@@ -78,6 +82,8 @@ wsServer.on("connection", (socket) => {
     let myNickname = tmpname;
     let myId = tmpid;
     let myAuth = tmpauth;
+    let myPath1 = tmpPath1;
+    let myPath2 = tmpPath2;
     wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
 
     socket.on("join_room", (roomName) => {
@@ -109,7 +115,7 @@ wsServer.on("connection", (socket) => {
         ++targetRoom.currentCount;
 
         socket.join(roomName);
-        socket.emit("info", myId, myNickname, myAuth);
+        socket.emit("info", myId, myNickname, myAuth, myPath1, myPath2);
         socket.emit("welcome", targetRoom.users);
         wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
 
@@ -155,7 +161,7 @@ wsServer.on("connection", (socket) => {
         wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
     });
     socket.on("capture", (file) => {
-        fs.writeFile("/Users/gimjunseo/graduation/graduatationGit/Backend-KimTaeHyun/app/src/public/capture/" + tmpid + " " + tmpname + ".jpg", file, (err) => console.log(err));
+        fs.writeFile("F:\\Graduation-github\\graduatationGit\\Backend-KimTaeHyun\\app\\src\\public\\capture\\" + tmpid + " " + tmpname + ".jpg", file, (err) => console.log(err));
     });
 });
 

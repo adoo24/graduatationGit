@@ -41,6 +41,8 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
             req.session.uid = response.id;
             req.session.nickname = response.nickname;
             req.session.auth = response.auth;
+            req.session.face1 = response.face1;
+            req.session.face2 = response.face2;
         }
         return res.json(response);
     },

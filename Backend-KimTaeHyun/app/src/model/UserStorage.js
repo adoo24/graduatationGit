@@ -27,9 +27,11 @@ class UserStorage {
                 }
                 else{
                     resolve({id: data[0].id, psword: data[0].password,
-                            nickname : data[0].name, auth: "student"});
+                            nickname : data[0].name, auth: "student",
+                            face1: data[0].face1, face2: data[0].face2});
                     console.log({id: data[0].id, psword: data[0].password,
-                        nickname: data[0].name, auth: "student"});
+                        nickname: data[0].name, auth: "student",
+                    face1: data[0].face1, face2: data[0].face2});
                 }
             })
         })
