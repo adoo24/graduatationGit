@@ -187,17 +187,18 @@ const dataURLtoFile = (dataurl, fileName) => {
 
 
 
-captureBtn.addEventListener("click", async function() {             
+captureBtn.addEventListener("click", async function() {
     canvas.getContext('2d').drawImage(myFace, 0, 0, canvas.width, canvas.height);
     let image_data_url = canvas.toDataURL('image/jpeg');
-    var file = dataURLtoFile(image_data_url,'capture.jpg');
+    var file = dataURLtoFile(image_data_url, 'capture.jpg');
     Promise.all([
         socket.emit("capture", file),
-        faceapi.nets.faceRecognitionNet.loadFromUri('js/home/models'), 
-        faceapi.nets.ssdMobilenetv1.loadFromUri('js/home/models'), 
+        faceapi.nets.faceRecognitionNet.loadFromUri('js/home/models'),
+        faceapi.nets.ssdMobilenetv1.loadFromUri('js/home/models'),
         faceapi.nets.faceLandmark68Net.loadFromUri('js/home/models'),
-        ])
-    .then(start)
+    ])
+        .then(start)
+
     async function start() {
         let image = await faceapi.fetchImage('capture/'+schoolid+' '+nickname+'.jpg')
         const labeledFaceDescriptors = await loadLabeledImages()
@@ -213,27 +214,28 @@ captureBtn.addEventListener("click", async function() {
                 alert("사진과 일치합니다.")
             else
                 alert("사진과 일치하지 않습니다.")
-        }
-        else{
+        } else {
             alert("얼굴이 감지되지 않습니다. 다시 한번 캡처해주세요.")
         }
     }
+
     function loadLabeledImages() {
         const labels = ["Junseo"]
         return Promise.all(
-        labels.map(async label => {
-            const descriptions = []
-            for (let i = 1; i <= 2; i++) {
-            const img = await faceapi.fetchImage(`js/home/models/${i}.png`);
-            const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
-            descriptions.push(detections.descriptor)
-            }
-            return new faceapi.LabeledFaceDescriptors(label, descriptions)
-        })
+            labels.map(async label => {
+                    const descriptions = []
+                    let img = await faceapi.fetchImage(path1); //회원가입했을때사진
+                    let detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+                    descriptions.push(detections.descriptor)
+                    img = await faceapi.fetchImage(path2); //회원가입했을때사진
+                    detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+                    descriptions.push(detections.descriptor)
+                    return new faceapi.LabeledFaceDescriptors(label, descriptions)
+                }
+            )
         )
     }
 });
-
 
 
 
