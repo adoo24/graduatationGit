@@ -142,12 +142,12 @@ captureBtn.addEventListener("click", async function() {
         if (singleResult) {
             const bestMatch = faceMatcher.findBestMatch(singleResult.descriptor)
             if (bestMatch.label=="Junseo")              //유동적으로 바뀌게 수정해야함
-                console.log("Correct")
+                alert("사진과 일치합니다.")
             else
-                console.log("Not Correct")
+                alert("사진과 일치하지 않습니다.")
         }
         else{
-            console.log("아무도 없습니다.")
+            alert("얼굴이 감지되지 않습니다. 다시 한번 캡처해주세요.")
         }
     }
     function loadLabeledImages() {
