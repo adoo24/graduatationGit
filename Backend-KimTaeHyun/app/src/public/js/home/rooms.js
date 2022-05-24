@@ -133,7 +133,7 @@ captureBtn.addEventListener("click", async function() {
     async function start() {
         let image = await faceapi.fetchImage('capture/'+schoolid+' '+nickname+'.jpg')
         const labeledFaceDescriptors = await loadLabeledImages()
-        const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5)
+        const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.45)
         console.log("Model Loaded")
         const singleResult = await faceapi
         .detectSingleFace(image)
@@ -142,9 +142,12 @@ captureBtn.addEventListener("click", async function() {
         if (singleResult) {
             const bestMatch = faceMatcher.findBestMatch(singleResult.descriptor)
             if (bestMatch.label=="Junseo")              //유동적으로 바뀌게 수정해야함
-                console.log("Correct")
+                alert("사진과 일치합니다.")
             else
-                console.log("Not Correct")
+                alert("사진과 일치하지 않습니다.")
+        }
+        else{
+            alert("얼굴이 감지되지 않습니다. 다시 한번 캡처해주세요.")
         }
     }
     function loadLabeledImages() {
@@ -153,7 +156,7 @@ captureBtn.addEventListener("click", async function() {
         labels.map(async label => {
             const descriptions = []
             for (let i = 1; i <= 2; i++) {
-            const img = await faceapi.fetchImage(`https://raw.githubusercontent.com/adoo24/graduatationGit/main/%EA%B9%80%EC%A4%80%EC%84%9C/${i}.png`)
+            const img = await faceapi.fetchImage(`js/home/models/${i}.png`);
             const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
             descriptions.push(detections.descriptor)
             }
