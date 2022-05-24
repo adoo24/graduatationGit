@@ -72,6 +72,74 @@ async function getMedia(deviceId){
     }
 }
 
+let flag=1;
+let left_cnt=0
+let right_cnt=0
+let noFace_cnt=0
+let negScore=0
+const detectFaces = async () => {
+    const [prediction,predictions] = await Promise.all([model.estimateFaces(myFace, false),model1.estimateHands(myFace)])
+    if (predictions.length > 0) {
+        const result = predictions[0].landmarks;
+        for(let i=0;i<5;i++){                                  //y값 위치로 손모양 판별
+           for(let j=0;j<3;j++){
+             if(result[(i*4)+j+2][1]>result[(i*4)+j+1][1]){
+               flag=0;
+             }
+          }
+        }
+         for(let i=0;i<4;i++){                               //왼손만 인식
+           for(let j=0;j<4;j++){
+             if(result[(i+1)*4+j+1][0]<result[i*4+j+1][0]){
+               flag=0;
+             }
+           }
+         }
+        if(flag==1){
+          console.log("It is hand")
+        }
+        else flag=1;
+      }
+    if(left_cnt>10||right_cnt>10||noFace_cnt>10){
+        negScore++
+        left_cnt=0;
+        right_cnt=0;
+        noFace_cnt=0;
+    }
+    if(prediction.length>1){
+        console.log("2 or more faces detected")
+        return
+    }
+    else if(prediction==0){
+        console.log("No Faces detected")
+        noFace_cnt+=1
+        return
+    }
+    else noFace_cnt=0;
+    prediction.forEach((pred) => {
+        let eye=[[pred.landmarks[0][0],pred.landmarks[0][1]],[pred.landmarks[1][0],pred.landmarks[1][1]]];
+        let center_eyes=[(pred.landmarks[0][0]+pred.landmarks[1][0])/2,(pred.landmarks[0][1]+pred.landmarks[1][1])/2]
+        if(pred.landmarks[2][0]<(eye[0][0]+center_eyes[0])/2){
+            console.log("Left")
+            left_cnt+=1
+        }
+        else if(pred.landmarks[2][0]>(eye[1][0]+center_eyes[0])/2){
+            console.log("Right")
+            right_cnt+=1
+        }
+        else{
+            console.log("Center")
+            left_cnt=0
+            right_cnt=0
+        }
+    });
+
+};
+myFace.addEventListener("loadeddata", async () =>{
+    model = await blazeface.load();
+    model1 = await handpose.load();
+    setInterval(detectFaces,100);
+});
 // 뮤트
 
 function handleMuteClick() {
