@@ -3,8 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="835868af-2d35-4a9e-bc99-a12c7d9ae458" name="Changes" comment="&quot;package.json 충돌 해결&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/BU4NAejijiHbj7ILx15RVSPx0aVG-HN1.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/atJrYlqNaOhDM9HyyI8ORvFX4NZJ8fBB.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package-lock.json~a8ca3e72f8b57fc65bd3bcb43775d4672c277d63" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package.json~a8ca3e72f8b57fc65bd3bcb43775d4672c277d63" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/config/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/config/db.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/model/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/model/User.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/register.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/register.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +60,26 @@
       <recent name="C:\Users\kimtaehyun\WebstormProjects\graduatationGit\Backend-KimTaeHyun\app\src\public\js\home" />
       <recent name="C:\Users\kimtaehyun\WebstormProjects\graduatationGit" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kimtaehyun\WebstormProjects\graduationProject\Backend-KimTaeHyun\app" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/Backend-KimTaeHyun/app/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.start" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -78,6 +103,9 @@
       <workItem from="1652622161445" duration="2883000" />
       <workItem from="1652626596176" duration="3211000" />
       <workItem from="1652782572226" duration="2368000" />
+      <workItem from="1653827858789" duration="688000" />
+      <workItem from="1653828601217" duration="1909000" />
+      <workItem from="1653834154205" duration="3226000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;package.json 충돌 해결&quot;">
       <created>1652191052369</created>

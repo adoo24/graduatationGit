@@ -11,6 +11,8 @@ function login() {
         id: id.value,
         psword: psword.value,
     };
+    if(!id.value) return alert("아이디를 입력해 주십시오.");
+    if(!psword.value) return alert("비밀번호를 입력해 주십시오.")
     console.log(req);
     console.log(JSON.stringify(req));
     fetch("/login", {

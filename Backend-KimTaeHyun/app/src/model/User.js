@@ -52,7 +52,12 @@ class User{
     async register() {
         const client = this.body;
         console.log(client);
-        const response = await UserStorage.save(client);
+        try{
+            const response = await UserStorage.save(client);
+        } catch(error) {
+            console.log("로그인중복");
+            return {success: false, msg: "이미 존재하는 회원입니다."}
+        }
         return response;
     }
 }

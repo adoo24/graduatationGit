@@ -17,6 +17,11 @@ function register() {
         return alert("비밀번호가 일치하지 않습니다.");
     }
     if (!dept.value) return alert("학과를 입력해 주십시오.");
+    if (document.getElementById('학생').checked && (id.value.toString().length != 7 ||
+        !(id.value.toString().startsWith('c') || id.value.toString().startsWith('C') ||
+            id.value.toString().startsWith('b') || id.value.toString().startsWith('B'))))
+        return alert("올바른 학번을 입력해주세요")
+    if (psword.value.toString().length < 8) return alert("8자리 이상 비밀번호를 입력해주세요");
 
     var author;
     if(document.getElementById('학생').checked) {
