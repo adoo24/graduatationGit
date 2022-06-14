@@ -362,7 +362,7 @@ leaveBtn.addEventListener("click", leaveRoom);
 
 // Socket Code
 
-socket.on("info", async(myId, myNickname, myAuth, myPath1, myPath2) => {
+socket.on("studentInfo", async(myId, myNickname, myAuth, myPath1, myPath2) => {
     schoolid = myId;
     nickname = myNickname;
     auth = myAuth;
@@ -377,6 +377,13 @@ socket.on("info", async(myId, myNickname, myAuth, myPath1, myPath2) => {
     nicknameContainer.innerText = nickname;
 });
 
+socket.on("professorInfo", async(myId, myNickname, myAuth) => {
+    schoolid = myId;
+    nickname = myNickname;
+    auth = myAuth;
+    const nicknameContainer = document.querySelector("#userNickname");
+    nicknameContainer.innerText = nickname;
+})
 
 socket.on("welcome", async (userObj) => {
     await initCall();
