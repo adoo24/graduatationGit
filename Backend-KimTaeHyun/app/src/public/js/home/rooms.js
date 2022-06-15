@@ -138,9 +138,11 @@ const detectFaces = async () => {
 
 };
 myFace.addEventListener("loadeddata", async () =>{
-    model = await blazeface.load();
-    model1 = await handpose.load();
-    setInterval(detectFaces,100);
+    if (auth=="student"){
+        model = await blazeface.load();
+        model1 = await handpose.load();
+        setInterval(detectFaces,100);
+    }
 });
 // 뮤트
 
@@ -383,6 +385,7 @@ socket.on("professorInfo", async(myId, myNickname, myAuth) => {
     auth = myAuth;
     const nicknameContainer = document.querySelector("#userNickname");
     nicknameContainer.innerText = nickname;
+    captureBtn.hidden=true;
 })
 
 socket.on("welcome", async (userObj) => {

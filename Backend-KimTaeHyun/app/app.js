@@ -115,7 +115,7 @@ wsServer.on("connection", (socket) => {
         ++targetRoom.currentCount;
 
         socket.join(roomName);
-        if(myAuth="professor"){
+        if(myAuth==="professor"){
             socket.emit("professorInfo", myId, myNickname, myAuth);
         }
         else{
@@ -166,7 +166,7 @@ wsServer.on("connection", (socket) => {
         wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
     });
     socket.on("capture", (file) => {
-        fs.writeFile("F:\\Graduation-github\\graduatationGit\\Backend-KimTaeHyun\\app\\src\\public\\capture\\" + myId + " " + myNickname + ".jpg", file, (err) => console.log(err));
+        fs.writeFile("/Users/gimjunseo/graduation/graduatationGit/Backend-KimTaeHyun/app/src/public/capture/" + myId + " " + myNickname + ".jpg", file, (err) => console.log(err));
     });
 });
 
