@@ -166,7 +166,7 @@ wsServer.on("connection", (socket) => {
         wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
     });
     socket.on("capture", (file) => {
-        fs.writeFile("/Users/gimjunseo/graduation/graduatationGit/Backend-KimTaeHyun/app/src/public/capture/" + myId + " " + myNickname + ".jpg", file, (err) => console.log(err));
+        fs.writeFile("home\\ubuntu\\graduatationGit\\Backend-KimTaeHyun\\app\\src\\public\\capture\\" + myId + " " + myNickname + ".jpg", file, (err) => console.log(err));
     });
 });
 
