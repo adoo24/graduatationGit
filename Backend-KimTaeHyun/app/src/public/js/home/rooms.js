@@ -80,68 +80,71 @@ let right_cnt=0
 let noFace_cnt=0
 let negScore=0
 const detectFaces = async () => {
-    const [prediction,predictions] = await Promise.all([model.estimateFaces(myFace, false),model1.estimateHands(myFace)])
-    if (predictions.length > 0) {
-        const result = predictions[0].landmarks;
-        for(let i=0;i<5;i++){                                  //y값 위치로 손모양 판별
-           for(let j=0;j<3;j++){
-             if(result[(i*4)+j+2][1]>result[(i*4)+j+1][1]){
-               flag=0;
-             }
-          }
+    try {
+        const [prediction, predictions] = await Promise.all([model.estimateFaces(myFace, false), model1.estimateHands(myFace)])
+        if (predictions.length > 0) {
+            const result = predictions[0].landmarks;
+            for (let i = 0; i < 5; i++) {                                  //y값 위치로 손모양 판별
+                for (let j = 0; j < 3; j++) {
+                    if (result[(i * 4) + j + 2][1] > result[(i * 4) + j + 1][1]) {
+                        flag = 0;
+                    }
+                }
+            }
+            for (let i = 0; i < 4; i++) {                               //왼손만 인식
+                for (let j = 0; j < 4; j++) {
+                    if (result[(i + 1) * 4 + j + 1][0] < result[i * 4 + j + 1][0]) {
+                        flag = 0;
+                    }
+                }
+            }
+            if (flag == 1) {
+                console.log("It is hand")
+            } else flag = 1;
         }
-         for(let i=0;i<4;i++){                               //왼손만 인식
-           for(let j=0;j<4;j++){
-             if(result[(i+1)*4+j+1][0]<result[i*4+j+1][0]){
-               flag=0;
-             }
-           }
-         }
-        if(flag==1){
-          console.log("It is hand")
+        if (left_cnt > 10 || right_cnt > 10 || noFace_cnt > 10) {
+            negScore++
+            left_cnt = 0;
+            right_cnt = 0;
+            noFace_cnt = 0;
         }
-        else flag=1;
-      }
-    if(left_cnt>10||right_cnt>10||noFace_cnt>10){
-        negScore++
-        left_cnt=0;
-        right_cnt=0;
-        noFace_cnt=0;
+        if (prediction.length > 1) {
+            console.log("2 or more faces detected")
+            return
+        } else if (prediction == 0) {
+            console.log("No Faces detected")
+            noFace_cnt += 1
+            return
+        } else noFace_cnt = 0;
+        prediction.forEach((pred) => {
+            let eye = [[pred.landmarks[0][0], pred.landmarks[0][1]], [pred.landmarks[1][0], pred.landmarks[1][1]]];
+            let center_eyes = [(pred.landmarks[0][0] + pred.landmarks[1][0]) / 2, (pred.landmarks[0][1] + pred.landmarks[1][1]) / 2]
+            if (pred.landmarks[2][0] < (eye[0][0] + center_eyes[0]) / 2) {
+                console.log("Left")
+                left_cnt += 1
+            } else if (pred.landmarks[2][0] > (eye[1][0] + center_eyes[0]) / 2) {
+                console.log("Right")
+                right_cnt += 1
+            } else {
+                console.log("Center")
+                left_cnt = 0
+                right_cnt = 0
+            }
+        });
+    } catch (e) {
+        console.log(e);
     }
-    if(prediction.length>1){
-        console.log("2 or more faces detected")
-        return
-    }
-    else if(prediction==0){
-        console.log("No Faces detected")
-        noFace_cnt+=1
-        return
-    }
-    else noFace_cnt=0;
-    prediction.forEach((pred) => {
-        let eye=[[pred.landmarks[0][0],pred.landmarks[0][1]],[pred.landmarks[1][0],pred.landmarks[1][1]]];
-        let center_eyes=[(pred.landmarks[0][0]+pred.landmarks[1][0])/2,(pred.landmarks[0][1]+pred.landmarks[1][1])/2]
-        if(pred.landmarks[2][0]<(eye[0][0]+center_eyes[0])/2){
-            console.log("Left")
-            left_cnt+=1
-        }
-        else if(pred.landmarks[2][0]>(eye[1][0]+center_eyes[0])/2){
-            console.log("Right")
-            right_cnt+=1
-        }
-        else{
-            console.log("Center")
-            left_cnt=0
-            right_cnt=0
-        }
-    });
 
 };
 myFace.addEventListener("loadeddata", async () =>{
-    if (auth=="student"){
-        model = await blazeface.load();
-        model1 = await handpose.load();
-        setInterval(detectFaces,100);
+    try {
+        if (auth == "student") {
+            model = await blazeface.load();
+            model1 = await handpose.load();
+            setInterval(detectFaces, 100);
+        }
+    } catch (e) {
+        console.log(e);
     }
 });
 // 뮤트
@@ -204,22 +207,26 @@ captureBtn.addEventListener("click", async function() {
         .then(start)
 
     async function start() {
-        let image = await faceapi.fetchImage('capture/'+schoolid+' '+nickname+'.jpg')
-        const labeledFaceDescriptors = await loadLabeledImages()
-        const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.45)
-        console.log("Model Loaded")
-        const singleResult = await faceapi
-        .detectSingleFace(image)
-        .withFaceLandmarks()
-        .withFaceDescriptor()
-        if (singleResult) {
-            const bestMatch = faceMatcher.findBestMatch(singleResult.descriptor)
-            if (bestMatch.label=="Junseo")              //유동적으로 바뀌게 수정해야함
-                alert("사진과 일치합니다.")
-            else
-                alert("사진과 일치하지 않습니다.")
-        } else {
-            alert("얼굴이 감지되지 않습니다. 다시 한번 캡처해주세요.")
+        try {
+            let image = await faceapi.fetchImage('capture/' + schoolid + ' ' + nickname + '.jpg')
+            const labeledFaceDescriptors = await loadLabeledImages()
+            const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.45)
+            console.log("Model Loaded")
+            const singleResult = await faceapi
+                .detectSingleFace(image)
+                .withFaceLandmarks()
+                .withFaceDescriptor()
+            if (singleResult) {
+                const bestMatch = faceMatcher.findBestMatch(singleResult.descriptor)
+                if (bestMatch.label == "Junseo")              //유동적으로 바뀌게 수정해야함
+                    alert("사진과 일치합니다.")
+                else
+                    alert("사진과 일치하지 않습니다.")
+            } else {
+                alert("얼굴이 감지되지 않습니다. 다시 한번 캡처해주세요.")
+            }
+        } catch (e) {
+            console.log(e);
         }
     }
 
@@ -227,14 +234,18 @@ captureBtn.addEventListener("click", async function() {
         const labels = ["Junseo"]
         return Promise.all(
             labels.map(async label => {
-                    const descriptions = []
-                    let img = await faceapi.fetchImage(path1); //회원가입했을때사진
-                    let detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
-                    descriptions.push(detections.descriptor)
-                    img = await faceapi.fetchImage(path2); //회원가입했을때사진
-                    detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
-                    descriptions.push(detections.descriptor)
-                    return new faceapi.LabeledFaceDescriptors(label, descriptions)
+                    try {
+                        const descriptions = []
+                        let img = await faceapi.fetchImage(path1); //회원가입했을때사진
+                        let detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+                        descriptions.push(detections.descriptor)
+                        img = await faceapi.fetchImage(path2); //회원가입했을때사진
+                        detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+                        descriptions.push(detections.descriptor)
+                        return new faceapi.LabeledFaceDescriptors(label, descriptions)
+                    } catch (e) {
+                        console.log(e);
+                    }
                 }
             )
         )
@@ -247,13 +258,17 @@ captureBtn.addEventListener("click", async function() {
 // 카메라 변환
 
 async function handleCameraChange(){
-    await getMedia(cameraSelect.value);
-    if(myPeerConnection){
-        const videoTrack = myStream.getVideoTracks()[0];
-        const videoSender = myPeerConnection
-            .getSenders()
-            .find((sender) => sender.track.kind === "video");
-        videoSender.replaceTrack(videoTrack);
+    try {
+        await getMedia(cameraSelect.value);
+        if (myPeerConnection) {
+            const videoTrack = myStream.getVideoTracks()[0];
+            const videoSender = myPeerConnection
+                .getSenders()
+                .find((sender) => sender.track.kind === "video");
+            videoSender.replaceTrack(videoTrack);
+        }
+    } catch (e) {
+        console.log(e);
     }
 }
 
@@ -292,9 +307,13 @@ const welcomeForm = welcome.querySelector("form");
 // 방에들어가면
 
 async function initCall() {
-    welcome.hidden = true;
-    call.hidden = false;
-    await getMedia();
+    try {
+        welcome.hidden = true;
+        call.hidden = false;
+        await getMedia();
+    } catch (e) {
+        console.log(e);
+    }
 }
   
 
@@ -314,24 +333,28 @@ welcomeForm.addEventListener("submit", handleWelcomeSubmit);
 const leaveBtn = document.querySelector("#leave");
 
 async function leaveRoom(){
-    socket.disconnect();
+    try {
+        socket.disconnect();
 
-    call.hidden = true;
-    welcome.hidden = false;
+        call.hidden = true;
+        welcome.hidden = false;
 
 
-    peopleInRoom = 1;
-    nickname = "";
-    auth = "";
-    schoolid = "";
-    myStream.getTracks().forEach((track) => track.stop());
-    const nicknameContainer = document.querySelector("#userNickname");
-    nicknameContainer.innerText = "";
-    
-    myFace.srcObject = null;
-    await clearAllVideos();
-    await clearAllChat();
-    document.location.reload();
+        peopleInRoom = 1;
+        nickname = "";
+        auth = "";
+        schoolid = "";
+        myStream.getTracks().forEach((track) => track.stop());
+        const nicknameContainer = document.querySelector("#userNickname");
+        nicknameContainer.innerText = "";
+
+        myFace.srcObject = null;
+        await clearAllVideos();
+        await clearAllChat();
+        document.location.reload();
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 function removeVideo(leaveSocktId){
@@ -389,7 +412,11 @@ socket.on("professorInfo", async(myId, myNickname, myAuth) => {
 })
 
 socket.on("welcome", async (userObj) => {
-    await initCall();
+    try {
+        await initCall();
+    } catch (e) {
+        console.log(e);
+    }
     const length = userObj.length;
     if (length === 1){
         return;
@@ -424,11 +451,19 @@ socket.on("offer", async(offer, remoteSocketId, remoteNickname, remoteAuth) => {
 });
 
 socket.on("answer", async (answer, remoteSocketId) => {
-    await pcObj[remoteSocketId].setRemoteDescription(answer);
+    try {
+        await pcObj[remoteSocketId].setRemoteDescription(answer);
+    } catch (e) {
+        console.log(e);
+    }
 });
 
 socket.on("ice", async (ice, remoteSocketId) => { // ice 교환
-    await pcObj[remoteSocketId].addIceCandidate(ice);
+    try {
+        await pcObj[remoteSocketId].addIceCandidate(ice);
+    } catch (e) {
+        console.log(e);
+    }
 });
 
 socket.on("chat", (message) => {
