@@ -3,6 +3,7 @@
 //모듈
 const fs = require('fs');
 const http = require("http");
+const https = require("https");
 const SocketIO = require("socket.io");
 const express =require('express');
 const app = express();
@@ -15,6 +16,18 @@ var tmpauth;
 var tmpname;
 var tmpPath1;
 var tmpPath2;
+
+// Certificate 인증서 경로
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/bemysupervisor.com/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/bemysupervisor.com/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/bemysupervisor.com/chain.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
+
 
 
 //앱 세팅
@@ -36,8 +49,9 @@ app.use(expressSession({
 const home = require("./src/routes/home");
 
 app.use("/", home); // use -> 미들웨어 등록해주는 메서드
-const httpServer = http.createServer(app);
-const wsServer = SocketIO(httpServer);
+// const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
+const wsServer = SocketIO(httpsServer);
 
 app.get('/rooms', (req, res) =>{
     tmpid = req.session.uid;
@@ -95,7 +109,7 @@ wsServer.on("connection", (socket) => {
                 isRoomExist = true;
                 targetRoom = roomObj[i];
                 break;
-            }
+	    }
         }
 
         if(!isRoomExist){
@@ -166,12 +180,13 @@ wsServer.on("connection", (socket) => {
         wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
     });
     socket.on("capture", (file) => {
-        fs.writeFile("home\\ubuntu\\graduatationGit\\Backend-KimTaeHyun\\app\\src\\public\\capture\\" + myId + " " + myNickname + ".jpg", file, (err) => console.log(err));
+        fs.writeFile("/home/ubuntu/graduatationGit/Backend-KimTaeHyun/app/src/public/capture/" + myId + " " + myNickname + ".jpg", file, (err) => console.log(err));
     });
 });
 
 const handListen = () => console.log(`listening on http://localhost:3000`);
-httpServer.listen(3000, handListen);
+//httpServer.listen(3000, handListen);
+httpsServer.listen(3000,handListen);
 
 
 
