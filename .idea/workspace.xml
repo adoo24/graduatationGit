@@ -3,13 +3,19 @@
   <component name="ChangeListManager">
     <list default="true" id="835868af-2d35-4a9e-bc99-a12c7d9ae458" name="Changes" comment="&quot;package.json 충돌 해결&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package-lock.json~a8ca3e72f8b57fc65bd3bcb43775d4672c277d63" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/package.json~a8ca3e72f8b57fc65bd3bcb43775d4672c277d63" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/config/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/config/db.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/1a0LDbPS5j9P06s526bpRw_7nEgxez1r.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/1zNvI__8igdS980yffTDQhsX4DOzwmU6.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/7hdjv7NRNZbJp0xZcc3rFMs97QjhG7wF.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/EclVZT5637-JkOnTMMwQ3MnUHsYRxFWc.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/iK1RxlE_bzn0CI5OXfqaFeK5v9XCIc4-.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/xCEHYE9zAX55s6b96rSsmeLlUhEhSG0a.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/model/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/model/User.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/model/UserStorage.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/model/UserStorage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/faceRegister.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/faceRegister.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/register.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/register.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/rooms.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/rooms.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/routes/home/home.ctrl.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/routes/home/home.ctrl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/views/home/rooms.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/views/home/rooms.ejs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,6 +112,20 @@
       <workItem from="1653827858789" duration="688000" />
       <workItem from="1653828601217" duration="1909000" />
       <workItem from="1653834154205" duration="3226000" />
+      <workItem from="1654003552988" duration="2385000" />
+      <workItem from="1658649546326" duration="1206000" />
+      <workItem from="1662615126388" duration="1282000" />
+      <workItem from="1663329359397" duration="1769000" />
+      <workItem from="1663405893717" duration="1530000" />
+      <workItem from="1663487776400" duration="1598000" />
+      <workItem from="1663509759182" duration="1629000" />
+      <workItem from="1663572506554" duration="1347000" />
+      <workItem from="1663673713581" duration="2157000" />
+      <workItem from="1664810178410" duration="1143000" />
+      <workItem from="1664880316310" duration="4896000" />
+      <workItem from="1664953524297" duration="1662000" />
+      <workItem from="1665401836214" duration="2167000" />
+      <workItem from="1666003905188" duration="5847000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;package.json 충돌 해결&quot;">
       <created>1652191052369</created>

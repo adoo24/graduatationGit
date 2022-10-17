@@ -6,6 +6,7 @@ const cameraBtn = document.getElementById("camera");
 const cameraSelect = document.getElementById("cameras");
 const captureBtn = document.getElementById("capture");
 const canvas = document.getElementById("canvas");
+const logOutBtn = document.getElementById("logout");
 
 
 const call = document.getElementById("call");
@@ -29,6 +30,10 @@ let pcObj = {
 };
 
 // 카메라를 찾는 함수
+
+function logout(){
+
+}
 
 async function getCameras(){
     try{

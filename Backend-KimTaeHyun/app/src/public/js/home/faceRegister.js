@@ -108,7 +108,6 @@ function faceRegister() {
     }).then((res) => res.json())
         .then((res) => {
             if (res.success){
-                alert("회원가입에 성공하였습니다.")
                 location.href = "/login"
             } else{
                 alert(res.msg);

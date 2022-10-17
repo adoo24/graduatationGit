@@ -8,6 +8,15 @@ class UserStorage {
 
     }
 
+    static async searchUser(id) {
+        await db.query("select * from student where id = ?", [id], (err, data) => {
+            if (data.length === 0)
+                return false;
+            else
+                return true;
+        })
+    }
+
     static async getUser(id) { //id가 db에 조회가 안되는 경우, 에러가 난 경우 제외하고 db에서 아이디,비번을 빼옴
         return new Promise((resolve, reject) => {
             db.query("select * from student where id = ?", [id], (err, data) => {

@@ -49,7 +49,7 @@ function register() {
     }).then((res) => res.json())
         .then((res) => {
             if (res.success){
-                if(req.auth === "student") {
+                if(req.auth === "student") { //student로 가입할 때 아이디가 있는지 없는지
                     location.href = "/face-register"
                 }else {
                     location.href = "/login"

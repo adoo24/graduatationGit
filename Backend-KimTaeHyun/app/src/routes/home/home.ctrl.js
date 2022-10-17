@@ -16,9 +16,9 @@ const output = {
         res.render("home/index");
     },
     login: (req, res) => {
-        if (req.session.isLogined === true){
-            res.redirect('/rooms') //session 유지 테스트
-        } else
+        // if (req.session.isLogined === true){
+        //     res.redirect('/rooms') //session 유지 테스트
+        // } else
         res.render("home/login");
     },
     register: (req,res) =>{
@@ -48,12 +48,12 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
     },
     register: async (req, res) => {
         info = req.body;
+        const user = new User(req);
         if (req.body.auth == 'professor') {
-            const user = new User(req);
             const response = await user.register();
             return res.json(response)
         } else{
-            const response = {success: true};
+            const response = await user.getUser(); //유저아이디만 보내서 중복됐는지 검사
             return res.json(response);
         }
     }

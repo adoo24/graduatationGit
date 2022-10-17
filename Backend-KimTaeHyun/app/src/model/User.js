@@ -9,6 +9,16 @@ class User{
         this.file = req.file;
     }
 
+    async getUser(){
+        const client = this.body;
+        const isAlreadyRegisetered = await UserStorage.searchUser(client.id);
+        if (isAlreadyRegisetered === true)
+            return {success: false, msg: "이미 가입된 아이디입니다."};
+        else
+            return {success: true};
+
+    }
+
     async login(){
         const client= this.body; //body에 유저 정보들
         const session = this.session //session에 session정보들
