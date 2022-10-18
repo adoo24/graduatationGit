@@ -9,7 +9,7 @@ class UserStorage {
                 if (data.length === 0){
                     db.query("select * from professor where id = ?", [id], (err,data)=>{
                         if (data.length === 0){
-                            resolve({success:true});
+                            resolve({success: true});
                         }
                         else {
                             reject(new Error("중복"));

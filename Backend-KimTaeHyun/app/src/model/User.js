@@ -11,11 +11,12 @@ class User{
 
     async checkUser() {
         const client = this.body;
+        let response;
         try {
-            const response = await UserStorage.searchUser(client.id);
+            response = await UserStorage.searchUser(client.id);
             console.log(client.id);
         } catch (error) {
-            console.log("로그인중복");
+            console.log("회원가입중복");
             return {success: false, msg: "이미 존재하는 회원입니다."}
         }
         return response;
@@ -64,8 +65,9 @@ class User{
     async register() {
         const client = this.body;
         console.log(client);
+        let response;
         try{
-            const response = await UserStorage.save(client);
+            response = await UserStorage.save(client);
         } catch(error) {
             console.log("로그인중복");
             return {success: false, msg: "이미 존재하는 회원입니다."}

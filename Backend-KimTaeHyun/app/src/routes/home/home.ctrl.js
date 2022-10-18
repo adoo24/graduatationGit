@@ -54,7 +54,7 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
             if (response.success == true){
                 response = await user.register();
             }
-            return res.json(response)
+            return res.json(response);
         } else{
             const response = await user.checkUser(); //유저아이디만 보내서 중복됐는지 검사
             return res.json(response);
