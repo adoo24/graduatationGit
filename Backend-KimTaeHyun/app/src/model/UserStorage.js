@@ -3,12 +3,18 @@
 const db = require("../config/db");
 
 class UserStorage {
-
     static async searchUser(id) {
         return new Promise((resolve, reject) => {
-            db.query("select * from student as s,professor as p where s.id = ? or p.id = ?", [id], (err, data) => {
+            db.query("select * from student where id = ?", [id], (err, data) => {
                 if (data.length === 0){
-                    resolve({success:true});
+                    db.query("select * from professor where id = ?", [id], (err,data)=>{
+                        if (data.length ===0){
+                            resolve({success:true});
+                        }
+                        else {
+                            reject(`${err}`);
+                        }
+                    }
                 }
                 else {
                     reject(`${err}`);
