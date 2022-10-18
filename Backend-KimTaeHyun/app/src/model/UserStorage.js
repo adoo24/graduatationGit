@@ -14,7 +14,7 @@ class UserStorage {
                         else {
                             reject(`${err}`);
                         }
-                    }
+                    })
                 }
                 else {
                     reject(`${err}`);
