@@ -61,7 +61,7 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
         }
     }
     ,
-    upload: (req, res) => { //실질적인 회원등록.
+    upload: async (req, res) => { //실질적인 회원등록.
         console.log(req.files);
         console.log(info);
         const imageUpload = new ImageUpload(info, req.files); //유저정보, 유저얼굴사진 정보 함께 보냄
