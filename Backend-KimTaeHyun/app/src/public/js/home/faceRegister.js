@@ -111,9 +111,10 @@ function faceRegister() {
             console.log(res);
             if (res.success){
                 console.log("faceRegister success")
+                alert("회원가입에 성공했습니다.")
                 location.href = "/login"
             } else{
-                alert("조졋다");
+                alert("이미 가입된 회원입니다.");
             }
         })
         .catch((err) => {
