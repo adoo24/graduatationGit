@@ -58,8 +58,11 @@ class UserStorage {
                 db.query("insert into student (id,name,password,dept,face1,face2) values(?, ?, ?, ?, ?, ?);",
                     [userInfo.id, userInfo.name, userInfo.psword, userInfo.dept, files.file1.path, files.file2.path]
                     , (err, data) => {
-                        if (err) reject(`${err}`);
-                        resolve({success: true});
+                        if (err){
+                            reject(`${err}`);
+                        } else{
+                            resolve({success: true});
+                        }
                     })
             })
         }
@@ -68,8 +71,11 @@ class UserStorage {
                 db.query("insert into professor (id,name,password,dept) values(?, ?, ?, ?);",
                     [userInfo.id, userInfo.name, userInfo.psword, userInfo.dept]
                     , (err, data) => {
-                        if (err) reject(`${err}`);
-                        resolve({success: true});
+                        if (err) {
+                            reject(`${err}`);
+                        } else{
+                            resolve({success: true});
+                        }
                     })
             })
         }

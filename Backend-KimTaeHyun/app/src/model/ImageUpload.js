@@ -16,6 +16,7 @@ class User{
                     file2 : file[1],
                 };
         const response = await UserStorage.save(info, upload);
+        console.log(response);
         return response;
     }
 
