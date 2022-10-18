@@ -9,7 +9,7 @@ class User{
         this.file = req.file;
     }
 
-    async getUser() {
+    async checkUser() {
         const client = this.body;
         try {
             const response = await UserStorage.searchUser(client.id);

@@ -49,11 +49,14 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
     register: async (req, res) => {
         info = req.body;
         const user = new User(req);
-        if (req.body.auth == 'professor') {
-            const response = await user.register();
+        if (req.body.auth === 'professor') {
+            var response = await user.checkUser();
+            if (response.success == true){
+                response = await user.register();
+            }
             return res.json(response)
         } else{
-            const response = await user.getUser(); //유저아이디만 보내서 중복됐는지 검사
+            const response = await user.checkUser(); //유저아이디만 보내서 중복됐는지 검사
             return res.json(response);
         }
     }
