@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="835868af-2d35-4a9e-bc99-a12c7d9ae458" name="Changes" comment="&quot;package.json 충돌 해결&quot;">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/faceRegister.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/faceRegister.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -114,7 +113,7 @@
       <workItem from="1664953524297" duration="1662000" />
       <workItem from="1665401836214" duration="2167000" />
       <workItem from="1666003905188" duration="7678000" />
-      <workItem from="1666070205606" duration="11754000" />
+      <workItem from="1666070205606" duration="11987000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;package.json 충돌 해결&quot;">
       <created>1652191052369</created>

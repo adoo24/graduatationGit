@@ -111,7 +111,7 @@ function faceRegister() {
                 console.log("faceRegister success")
                 location.href = "/login"
             } else{
-                alert(res.msg);
+                alert("조졋다");
             }
         })
         .catch((err) => {
