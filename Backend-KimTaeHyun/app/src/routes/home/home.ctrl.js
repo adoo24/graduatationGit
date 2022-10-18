@@ -50,7 +50,7 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
         info = req.body;
         const user = new User(req);
         if (req.body.auth === 'professor') {
-            var response = await user.checkUser();
+            let response = await user.checkUser(); //중복인지 체크부터 한다.
             if (response.success == true){
                 response = await user.register();
             }

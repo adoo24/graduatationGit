@@ -8,16 +8,16 @@ class UserStorage {
             db.query("select * from student where id = ?", [id], (err, data) => {
                 if (data.length === 0){
                     db.query("select * from professor where id = ?", [id], (err,data)=>{
-                        if (data.length ===0){
+                        if (data.length === 0){
                             resolve({success:true});
                         }
                         else {
-                            reject(`${err}`);
+                            reject(new Error("중복"));
                         }
                     })
                 }
                 else {
-                    reject(`${err}`);
+                    reject(new Error("중복"));
                 }
             })
         })
@@ -29,7 +29,7 @@ class UserStorage {
                 if (data.length === 0){
                     db.query("select * from professor where id = ?", [id], (err,data) =>{
                         if (data.length === 0) {
-                            reject(`${err}`);
+                            reject(new Error("데이터 없음"));
                         }
                         else{
                             console.log("3")
