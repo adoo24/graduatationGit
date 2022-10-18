@@ -107,7 +107,9 @@ function faceRegister() {
         body: formdata,
     }).then((res) => res.json())
         .then((res) => {
-            if (res.success === true){
+            console.log("faceRegister response 체크");
+            console.log(res);
+            if (res.success){
                 console.log("faceRegister success")
                 location.href = "/login"
             } else{
