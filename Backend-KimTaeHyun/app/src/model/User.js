@@ -13,6 +13,7 @@ class User{
         const client = this.body;
         try {
             const response = await UserStorage.searchUser(client.id);
+            console.log(client.id);
         } catch (error) {
             console.log("로그인중복");
             return {success: false, msg: "이미 존재하는 회원입니다."}
