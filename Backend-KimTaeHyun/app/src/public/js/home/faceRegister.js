@@ -107,7 +107,8 @@ function faceRegister() {
         body: formdata,
     }).then((res) => res.json())
         .then((res) => {
-            if (res.success){
+            if (res.success === true){
+                console.log("faceRegister success")
                 location.href = "/login"
             } else{
                 alert(res.msg);
