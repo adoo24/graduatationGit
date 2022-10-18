@@ -11,12 +11,12 @@ class User{
 
     async getUser(){
         const client = this.body;
-        const isAlreadyRegisetered = await UserStorage.searchUser(client.id);
-        if (isAlreadyRegisetered === true)
-            return {success: false, msg: "이미 가입된 아이디입니다."};
-        else
-            return {success: true};
-
+        try {
+            const isAlreadyRegisetered = await UserStorage.searchUser(client.id);
+        } catch(error) {
+            console.log("로그인중복");
+            return {success: false, msg: "이미 존재하는 회원입니다."}
+        }
     }
 
     async login(){

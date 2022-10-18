@@ -4,16 +4,16 @@ const db = require("../config/db");
 
 class UserStorage {
 
-    static getUsers() {
-
-    }
-
     static async searchUser(id) {
-        await db.query("select * from student where id = ?", [id], (err, data) => {
-            if (data.length === 0)
-                return false;
-            else
-                return true;
+        return new Promise((resolve, reject) => {
+            db.query("select * from student,professor where id = ?", [id], (err, data) => {
+                if (data.length === 0){
+                    resolve({success:true});
+                }
+                else {
+                    reject(`${err}`);
+                }
+            })
         })
     }
 
