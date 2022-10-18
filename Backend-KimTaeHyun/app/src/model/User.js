@@ -9,14 +9,15 @@ class User{
         this.file = req.file;
     }
 
-    async getUser(){
+    async getUser() {
         const client = this.body;
         try {
-            const isAlreadyRegisetered = await UserStorage.searchUser(client.id);
-        } catch(error) {
+            const reponse = await UserStorage.searchUser(client.id);
+        } catch (error) {
             console.log("로그인중복");
             return {success: false, msg: "이미 존재하는 회원입니다."}
         }
+        return response;
     }
 
     async login(){
