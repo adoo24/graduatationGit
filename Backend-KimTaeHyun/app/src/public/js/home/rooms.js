@@ -223,8 +223,10 @@ captureBtn.addEventListener("click", async function() {
                 .withFaceDescriptor()
             if (singleResult) {
                 const bestMatch = faceMatcher.findBestMatch(singleResult.descriptor)
-                if (bestMatch.label == "Junseo")              //유동적으로 바뀌게 수정해야함
-                    alert("사진과 일치합니다.")
+                if (bestMatch.label == "Junseo") {           //유동적으로 바뀌게 수정해야함
+                    alert("사진과 일치합니다.");
+                    socket.emit("confirm", nickname);
+                }
                 else
                     alert("사진과 일치하지 않습니다.")
             } else {
@@ -314,7 +316,7 @@ function insertStudent(student){
         return;
     }
     const li = document.createElement("li");
-    li.innerText = student;
+    li.innerText = student + " : 미 인증";
     li.id = student;
 
     studentBox.appendChild(li);
@@ -324,6 +326,12 @@ function deleteStudent(student){
     const li = document.getElementById(student);
     li.remove();
 }
+
+socket.on("captureDone", (doneStudent) => {
+    const li = document.getElementById(doneStudent);
+    li.innerText = doneStudent + " : 인증 완료";
+    console.log("인증 완료 학생 추가");
+})
 
 // Welcome Form ( join a room )
 

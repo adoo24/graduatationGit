@@ -124,7 +124,7 @@ wsServer.on("connection", (socket) => {
         targetRoom.users.push({
             socketId: socket.id,
             myNickname,
-            myAuth
+            auth: myAuth
         });
         ++targetRoom.currentCount;
 
@@ -182,6 +182,17 @@ wsServer.on("connection", (socket) => {
     socket.on("capture", (file) => {
         fs.writeFile("/home/ubuntu/graduatationGit/Backend-KimTaeHyun/app/src/public/capture/" + myId + " " + myNickname + ".jpg", file, (err) => console.log(err));
     });
+    socket.on("confirm", (confirmName) => {
+        for (let i = 0; i < roomObj.length; ++i) {
+            if (roomObj[i].roomName === myRoomName) {
+                for (let j = 0; j < roomObj[i].users.length; ++j) {
+                    if (roomObj[i].users[j].auth === "professor") {
+                        socket.to(roomObj[i].users[j].socketId).emit("captureDone", confirmName);
+                    }
+                }
+            }
+        }
+    })
 });
 
 const handListen = () => console.log(`listening on http://localhost:3000`);
