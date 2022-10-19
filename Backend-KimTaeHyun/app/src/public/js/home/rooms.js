@@ -459,7 +459,7 @@ socket.on("welcome", async (userObj) => {
     }
     for (let i = 0 ; i < length - 1; ++i){
         try{
-            const newPC = makeConnection(
+            const newPC = await makeConnection(
                 userObj[i].socketId,
                 userObj[i].myNickname,
                 userObj[i].myAuth
@@ -475,7 +475,7 @@ socket.on("welcome", async (userObj) => {
 
 socket.on("offer", async(offer, remoteSocketId, remoteNickname, remoteAuth) => {
     try{
-        const newPC = makeConnection(remoteSocketId, remoteNickname, remoteAuth);
+        const newPC = await makeConnection(remoteSocketId, remoteNickname, remoteAuth);
         await newPC.setRemoteDescription(offer);
         const answer = await newPC.createAnswer();
         await newPC.setLocalDescription(answer);
@@ -529,8 +529,8 @@ socket.on("room_change", (rooms, roomCount) => {
 
 // RTC Code
 
-function makeConnection(remoteSocketId, remoteNickname, remoteAuth) {
-    myPeerConnection = new RTCPeerConnection({
+async function makeConnection (remoteSocketId, remoteNickname, remoteAuth) {
+    myPeerConnection = await new RTCPeerConnection({
         iceServers: [
         {
             urls: [
