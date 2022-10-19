@@ -309,9 +309,20 @@ chatForm.addEventListener("submit", handleChatSubmit);
 const studentBox = document.querySelector("#studentBox");
 
 function insertStudent(student){
+    const find = document.getElementById(student);
+    if (find) {
+        return;
+    }
     const li = document.createElement("li");
     li.innerText = student;
+    li.id = student;
+
     studentBox.appendChild(li);
+}
+
+function deleteStudent(student){
+    const li = document.getElementById(student);
+    li.remove();
 }
 
 // Welcome Form ( join a room )
@@ -489,6 +500,7 @@ socket.on("chat", (message) => {
 
 socket.on("leave_room", (leaveSocktId, nickname) => {
     removeVideo(leaveSocktId);
+    deleteStudent(nickname);
     writeChat(`${nickname} leaved the room`);
     --peopleInRoom;
     
