@@ -462,7 +462,7 @@ socket.on("welcome", async (userObj) => {
             const newPC = await makeConnection(
                 userObj[i].socketId,
                 userObj[i].myNickname,
-                userObj[i].myAuth
+                userObj[i].auth
             );
             const offer = await newPC.createOffer();
             await newPC.setLocalDescription(offer);
