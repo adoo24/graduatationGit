@@ -57,6 +57,17 @@ async function getCameras(){
 // 오디오와 비디오를 가져오는 함수 
 
 async function getMedia(deviceId){
+    let onlyStream = null;
+    //
+    const myInitialConstrains = {
+        audio: false,
+        video: { facingMode: "user"},
+    };
+    const myCameraConstraints = {
+        audio: false,
+        video: { deviceId: deviceId },
+    };
+
     const initialConstrains = {
         audio: true,
         video: { facingMode: "user"},
@@ -69,7 +80,10 @@ async function getMedia(deviceId){
         myStream = await navigator.mediaDevices.getUserMedia(
             deviceId ? cameraConstraints : initialConstrains
         );
-        myFace.srcObject = myStream;
+        onlyStream = await navigator.mediaDevices.getUserMedia(
+            deviceId ? myCameraConstraints : myInitialConstrains
+        );
+        myFace.srcObject = onlyStream;
         if(!deviceId){
             await getCameras();
         }
@@ -391,11 +405,11 @@ async function leaveRoom(){
     }
 }
 
-function removeVideo(leaveSocktId){
+function removeVideo(leaveSocketId){
     const streams = document.querySelector("#streams");
     const streamArr = streams.querySelectorAll("div");
     streamArr.forEach((streamElement) => {
-        if(streamElement.id === leaveSocktId){
+        if(streamElement.id === leaveSocketId){
             streams.removeChild(streamElement);
         }
     });
@@ -506,8 +520,8 @@ socket.on("chat", (message) => {
     writeChat(message);
 });
 
-socket.on("leave_room", (leaveSocktId, nickname) => {
-    removeVideo(leaveSocktId);
+socket.on("leave_room", (leaveSocketId, nickname) => {
+    removeVideo(leaveSocketId);
     deleteStudent(nickname);
     writeChat(`${nickname} leaved the room`);
     --peopleInRoom;
