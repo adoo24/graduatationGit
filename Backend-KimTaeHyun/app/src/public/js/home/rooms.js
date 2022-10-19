@@ -403,24 +403,19 @@ leaveBtn.addEventListener("click", leaveRoom);
 // Socket Code
 
 socket.on("studentInfo", async(myId, myNickname, myAuth, myPath1, myPath2) => {
-    try {
-        schoolid = myId;
-        nickname = myNickname;
-        auth = myAuth;
-        path1 = myPath1;
-        path2 = myPath2;
-        path1 = path1.replace(/\\/g, '/');
-        path2 = path2.replace(/\\/g, '/');
-        path1 = path1.substr(11);
-        path2 = path2.substr(11);
+    schoolid = myId;
+    nickname = myNickname;
+    auth = myAuth;
+    path1 = myPath1;
+    path2 = myPath2;
+    path1 = path1.replace(/\\/g, '/');
+    path2 = path2.replace(/\\/g, '/');
+    path1 = path1.substr(11);
+    path2 = path2.substr(11);
 
-        const nicknameContainer = document.querySelector("#userNickname");
-        nicknameContainer.innerText = nickname;
-        await insertStudent(myNickname);
-        studentBox.hidden = true;
-    } catch (e) {
-        console.log(e);
-    }
+    const nicknameContainer = document.querySelector("#userNickname");
+    nicknameContainer.innerText = nickname;
+    studentBox.hidden = true;
 });
 
 socket.on("professorInfo", async(myId, myNickname, myAuth) => {
@@ -535,16 +530,17 @@ function makeConnection(remoteSocketId, remoteNickname, remoteAuth) {
     console.log("------");
     console.log(remoteAuth);
     if (auth === 'professor'){
-        console.log("123123");
         myPeerConnection.addEventListener("addstream", (event) => {
             handleAddStream(event, remoteSocketId, remoteNickname);
         });
         myStream
           .getTracks()
           .forEach((track) => myPeerConnection.addTrack(track, myStream));
+        if (remoteAuth == 'student'){
+            insertStudent(remoteNickname);
+        }
     }
     else if (remoteAuth === 'professor'){
-        console.log("234234")
         myPeerConnection.addEventListener("addstream", (event) => {
             handleAddStream(event, remoteSocketId, remoteNickname);
         });
