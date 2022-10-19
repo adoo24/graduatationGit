@@ -304,6 +304,16 @@ function writeChat(message){
 
 chatForm.addEventListener("submit", handleChatSubmit);
 
+// 감독관에게 studentList 보여주기
+
+const studentBox = document.querySelector("#studentBox");
+
+function insertStudent(student){
+    const li = document.createElement("li");
+    li.innerText = student;
+    studentBox.appendChild(li);
+}
+
 // Welcome Form ( join a room )
 
 const welcome = document.getElementById("welcome");
@@ -405,6 +415,8 @@ socket.on("studentInfo", async(myId, myNickname, myAuth, myPath1, myPath2) => {
 
     const nicknameContainer = document.querySelector("#userNickname");
     nicknameContainer.innerText = nickname;
+    insertStudent(myNickname);
+    studentBox.hidden = true;
 });
 
 socket.on("professorInfo", async(myId, myNickname, myAuth) => {
@@ -414,6 +426,7 @@ socket.on("professorInfo", async(myId, myNickname, myAuth) => {
     const nicknameContainer = document.querySelector("#userNickname");
     nicknameContainer.innerText = nickname;
     captureBtn.hidden=true;
+    studentBox.hidden=false;
 })
 
 socket.on("welcome", async (userObj) => {
