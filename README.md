@@ -6,14 +6,9 @@
 - [김준모](https://github.com/a00700c)
 - [김태현](https://github.com/bradbrad97)
 
-## Git Convention
-- feat: 새로운 기능 추가
-- fix: 버그 수정
-- design: 사용자 UI 디자인 변경
-- docs: 문서 수정
-- style: 코드 포맷 변경, 세미콜론 누락, 코드 수정이 없는 경우
-- refactor: 코드 리팩토링
-- test: 테스트 추가, 테스트 리팩토링
-- chore: 빌드 테스트 업데이트, 패키지 매니저 설정
-- rename: 파일, 폴더명을 수정하거나 옮기는 작업
-- remove: 파일, 폴더 삭제
+## 프로젝트 설명
+- 프로젝트 목적 : 비대면 시험에서의 부정 행위를 방지하기 위하여 실시간 캠 화면 공유가 가능하고, AI를 이용하여 시험 도중 부정 행위를 감지할 수 있는 사이트의 개발
+- 사용한 언어 : JavaScript
+- 사용한 기술 : Node.js, Express, socket.io, webRTC, tensorflow.js, MySQL, AWS EC2, AWS RDS, https
+- 프로젝트 진행 기간 : 2022년 3월 ~ 2022년 11월
+- 사이트 메인 페이지 : https://bemysupervisor.com
