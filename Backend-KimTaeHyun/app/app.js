@@ -6,6 +6,7 @@ const http = require("http");
 const https = require("https");
 const SocketIO = require("socket.io");
 const express =require('express');
+const db = require("../config/db");
 const app = express();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -97,7 +98,17 @@ function updateNegativeScore(myRoomName, myId, scoreToAdd){ //수정
             roomObj[i].userScores[myid] += scoreToAdd;
         }
     }
-    return roomObj[i].userScores[myid]
+    return roomObj[i].userScores[myid];
+}
+
+async function saveRoomDB(roomInfo){
+    let pid = roomInfo.hostID;
+    let rtime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    let rname = roomInfo.roomName;
+    await db.query("insert into room (pid, rtime, roomname) values(?,?,?);"),[pid, rtime, rname], (err,data) =>{
+      if (err) console.log("에러발생");
+      else console.log("hi");
+    })
 }
 
 wsServer.on("connection", (socket) => {
@@ -123,6 +134,7 @@ wsServer.on("connection", (socket) => {
 
         if(!isRoomExist){
             targetRoom = {
+                hostID //todo. 시험 담당 교수의 id를 넣어줘야함. 시험이 끝난 후 교수는 자신이 맡은 과목 시험의 부정점수를 확인해야 함.
                 roomName,
                 currentCount: 0,
                 users: [],
@@ -176,6 +188,7 @@ wsServer.on("connection", (socket) => {
                 --roomObj[i].currentCount;
 
                 if(roomObj[i].currentCount == 0){
+                    saveRoomDB(roomObj[i]) //room정보저장
                     isRoomEmpty = true;
                 }
             }
