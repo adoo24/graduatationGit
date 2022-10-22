@@ -91,6 +91,15 @@ function publicRoomCount(){
     return publicRoomCount;
 }
 
+function updateNegativeScore(myRoomName, myId, scoreToAdd){ //수정
+    for (let i = 0; i< roomObj.length; ++i){
+        if(roomObj[i].roomName === myRoomName){
+            roomObj[i].userScores[myid] += scoreToAdd;
+        }
+    }
+    return roomObj[i].userScores[myid]
+}
+
 wsServer.on("connection", (socket) => {
     let myRoomName = null;
     let myNickname = tmpname;
@@ -117,6 +126,7 @@ wsServer.on("connection", (socket) => {
                 roomName,
                 currentCount: 0,
                 users: [],
+                userScores: new Map() //수정됨. 여기서 users를 key = userID, value = negativeScore
             };
             roomObj.push(targetRoom);
         }
@@ -127,6 +137,8 @@ wsServer.on("connection", (socket) => {
             auth: myAuth
         });
         ++targetRoom.currentCount;
+
+        targetRoom.userScores.set(myId,0) //점수 0으로 초기화
 
         socket.join(roomName);
         if(myAuth==="professor"){
@@ -151,7 +163,7 @@ wsServer.on("connection", (socket) => {
     socket.on("chat", (message, roomName) => {
         socket.to(roomName).emit("chat", message);
     });
-    socket.on("disconnecting", () => {
+    socket.on("disconnecting", () => { //disconnection돼도 userScores map에선 삭제되지 않음. 시험 먼저끝나서 나가버린 경우에도 history가 남아야함.
         socket.to(myRoomName).emit("leave_room", socket.id, myNickname);
 
         let isRoomEmpty = false;
@@ -192,7 +204,11 @@ wsServer.on("connection", (socket) => {
                 }
             }
         }
+    }
+    socket.on("violation", (scoreToAdd) => { //수정
+        socket.emit("updateScore",updateNegativeScore(myRoomName, myId, scoreToAdd)); //업데이트된 점수 보냄.
     })
+    )
 });
 
 const handListen = () => console.log(`listening on http://localhost:3000`);
