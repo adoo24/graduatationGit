@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="835868af-2d35-4a9e-bc99-a12c7d9ae458" name="Changes" comment="&quot;package.json 충돌 해결&quot;">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/app.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -116,7 +115,7 @@
       <workItem from="1666003905188" duration="7678000" />
       <workItem from="1666070205606" duration="13172000" />
       <workItem from="1666268425481" duration="2428000" />
-      <workItem from="1666427182414" duration="7569000" />
+      <workItem from="1666427182414" duration="7757000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;package.json 충돌 해결&quot;">
       <created>1652191052369</created>

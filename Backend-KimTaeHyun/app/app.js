@@ -140,6 +140,7 @@ wsServer.on("connection", (socket) => {
                 users: [],
                 userScores: new Map() //수정됨. 여기서 users를 key = userID, value = negativeScore
             };
+            saveRoomDB(targetRoom);
             roomObj.push(targetRoom);
         }
 
@@ -188,7 +189,6 @@ wsServer.on("connection", (socket) => {
                 --roomObj[i].currentCount;
 
                 if(roomObj[i].currentCount == 0){
-                    saveRoomDB(roomObj[i]) //room정보저장
                     isRoomEmpty = true;
                 }
             }
