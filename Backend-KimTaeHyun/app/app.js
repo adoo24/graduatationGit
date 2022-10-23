@@ -108,7 +108,7 @@ async function saveRoomDB(roomInfo){
     await db.query("insert into room (pid, rtime, roomname) values(?,?,?);"),[pid, rtime, rname], (err,data) =>{
       if (err) console.log("에러발생");
       else console.log("hi");
-    })
+    }
 }
 
 wsServer.on("connection", (socket) => {
@@ -134,7 +134,7 @@ wsServer.on("connection", (socket) => {
 
         if(!isRoomExist){
             targetRoom = {
-                hostID //todo. 시험 담당 교수의 id를 넣어줘야함. 시험이 끝난 후 교수는 자신이 맡은 과목 시험의 부정점수를 확인해야 함.
+                hostID, //todo. 시험 담당 교수의 id를 넣어줘야함. 시험이 끝난 후 교수는 자신이 맡은 과목 시험의 부정점수를 확인해야 함.
                 roomName,
                 currentCount: 0,
                 users: [],
@@ -217,11 +217,11 @@ wsServer.on("connection", (socket) => {
                 }
             }
         }
-    }
+    });
     socket.on("violation", (scoreToAdd) => { //수정
         socket.emit("updateScore",updateNegativeScore(myRoomName, myId, scoreToAdd)); //업데이트된 점수 보냄.
-    })
-    )
+    });
+    
 });
 
 const handListen = () => console.log(`listening on http://localhost:3000`);
