@@ -130,7 +130,7 @@ wsServer.on("connection", (socket) => {
     wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
 
     socket.on("join_room", (roomName) => {
-        roomName = roomName + Math.floor(1000 + Math.random() * 9000).toString();
+        roomName = roomName
         myRoomName = roomName;
         let isRoomExist = false;
         let targetRoom = null;
