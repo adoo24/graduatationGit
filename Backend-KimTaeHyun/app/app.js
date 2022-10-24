@@ -106,7 +106,7 @@ async function saveRoomDB(roomInfo){
     let rtime = new Date().toISOString().slice(0, 19).replace('T', ' ');
     let rname = roomInfo.roomName;
     await db.query("insert into room (pid, rtime, roomname) values (?,?,?);",[pid, rtime, rname], (err,data) =>{
-      if (err) console.log("에러발생");
+      if (err) console.log(err);
       else console.log("hi");
     });
 }
