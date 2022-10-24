@@ -228,7 +228,7 @@ wsServer.on("connection", (socket) => {
         }
     });
     socket.on("violation", (scoreToAdd) => {
-        newScore = updateNegativeScore(myRoomName, myId, scoreToAdd)
+        let newScore = updateNegativeScore(myRoomName, myId, scoreToAdd)
         socket.emit("updateScore", newScore);//업데이트된 점수 보냄.
         console.log(myId, myNickname, "의 현재점수: ", newScore);
     });
