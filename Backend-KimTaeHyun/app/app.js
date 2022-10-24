@@ -95,23 +95,22 @@ function publicRoomCount(){
 function updateNegativeScore(myRoomName, myId, scoreToAdd){ //수정
     for (let i = 0; i< roomObj.length; ++i){
         if(roomObj[i].roomName === myRoomName){
-            roomObj[i].userScores[myid] += scoreToAdd;
+            roomObj[i].userScores[myId] += scoreToAdd;
+            return roomObj[i].userScores[myId];
         }
     }
-    return roomObj[i].userScores[myid];
 }
 
 async function saveRoomDB(roomInfo){
-    let pid = roomInfo.hostId;
+    let rid = roomInfo.roomName;
     let rtime = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    let rname = roomInfo.roomName;
-    await db.query("insert into room (pid, rtime, roomname) values (?,?,?);",[pid, rtime, rname], (err,data) =>{
+    await db.query("insert into room (rid, rtime) values (?,?);",[rid, rtime], (err,data) =>{
       if (err) console.log(err);
       else console.log("룸 DB저장 성공");
     });
 }
 
-async function saveVideoDB(filePath, sid){
+async function saveVideoDB(filePath, sid, rid){
     await db.query("insert into violation (sid, rid, address) values (?,?,?);", [sid, rid, filePath], (err,data) =>{
         if (err) console.log(err);
         else console.log("부정행위 DB저장 성공");
@@ -128,6 +127,7 @@ wsServer.on("connection", (socket) => {
     wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
 
     socket.on("join_room", (roomName) => {
+        roomName = roomName + Math.floor(1000 + Math.random() * 9000).toString();
         myRoomName = roomName;
         let isRoomExist = false;
         let targetRoom = null;
@@ -227,9 +227,8 @@ wsServer.on("connection", (socket) => {
             }
         }
     });
-    socket.on("violation", (violationInfo) => { //수정
-        saveVideoDB(violationInfo.filepath, myId);
-        socket.emit("updateScore",updateNegativeScore(myRoomName, myId, violationInfo.score)); //업데이트된 점수 보냄.
+    socket.on("violation", (scoreToAdd) => {
+        socket.emit("updateScore", updateNegativeScore(myRoomName, myId, scoreToAdd)); //업데이트된 점수 보냄.
     });
     socket.on("fraudCapture", (file) => {       //동영상 서버에 저장
         var today = new Date();   
@@ -237,7 +236,9 @@ wsServer.on("connection", (socket) => {
         var minutes = ('0' + today.getMinutes()).slice(-2);
         var seconds = ('0' + today.getSeconds()).slice(-2); 
         var timeString = hours + ':' + minutes  + ':' + seconds;
-        fs.writeFile("/home/ubuntu/graduatationGit/Backend-KimTaeHyun/app/src/public/capture/" +"Fraud "+timeString+" " + myId + " " + myNickname + ".webm", file, (err) => console.log(err));
+        var filePath = "/home/ubuntu/graduatationGit/Backend-KimTaeHyun/app/src/public/capture/" +"Fraud "+timeString+" " + myId + " " + myNickname + ".webm"
+        fs.writeFile(filePath, file, (err) => console.log(err));
+        saveVideoDB(filePath, myId, myRoomName);
     });
 });
 
