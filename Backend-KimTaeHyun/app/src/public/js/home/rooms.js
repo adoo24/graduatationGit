@@ -146,7 +146,6 @@ let left_cnt=0
 let right_cnt=0
 let noFace_cnt=0
 let twoFace_cnt=0
-let negScore=0  //부정점수
 function initiate(){        //부정 행위 로직 초기화
     left_cnt=0
     right_cnt=0
@@ -179,7 +178,7 @@ const detectFaces = async () => {
         else flag=1;
       }
     if(left_cnt+right_cnt>30){                              //얼굴이 정면을 충분히 바라보지 않음
-        negScore+=1
+        negScore = 1
         socket.emit("violation",negScore);
         left_cnt=0;
         right_cnt=0;
@@ -188,13 +187,13 @@ const detectFaces = async () => {
         console.log('Do not shake your head')
     }
     if(noFace_cnt>20){
-        negScore+=3
+        negScore = 3
         socket.emit("violation",negScore);
         noFace_cnt=0;
         shouldDownload=true
     }
     if(twoFace_cnt>20){
-        negScore+=3;
+        negScore = 3;
         socket.emit("violation",negScore);
         twoFace_cnt=0;
         shouldDownload=true

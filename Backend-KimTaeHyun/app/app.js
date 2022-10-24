@@ -228,9 +228,13 @@ wsServer.on("connection", (socket) => {
         }
     });
     socket.on("violation", (scoreToAdd) => {
-        socket.emit("updateScore", updateNegativeScore(myRoomName, myId, scoreToAdd)); //업데이트된 점수 보냄.
+        newScore = updateNegativeScore(myRoomName, myId, scoreToAdd)
+        socket.emit("updateScore", newScore);//업데이트된 점수 보냄.
+        console.log(myId, myNickname, "의 현재점수: ", newScore);
     });
+
     socket.on("fraudCapture", (file) => {       //동영상 서버에 저장
+        console.log(file)
         var today = new Date();   
         var hours = ('0' + today.getHours()).slice(-2); 
         var minutes = ('0' + today.getMinutes()).slice(-2);
