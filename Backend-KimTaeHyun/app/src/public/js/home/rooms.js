@@ -92,67 +92,136 @@ async function getMedia(deviceId){
         console.log(e);
     }
 }
+let recorder;
+let recordedBlobs;
 
-let flag=1;
+function handleRecording(){                 //영상 5초단위로 저장하는 함수들
+    startRecording();
+    setTimeout(stopRecording,4900);
+    setTimeout(download,4900);
+}
+
+function handleDataAvailable(event){
+    if (event.data && event.data.size>0){
+        recordedBlobs.push(event.data);
+    }
+}
+
+function startRecording(){
+    recordedBlobs=[];
+    var options ={mimeType: 'video/webm'};
+    recorder=new MediaRecorder(myFace.srcObject,options);
+    recorder.ondataavailable = handleDataAvailable;
+    recorder.start(10);
+}
+
+function stopRecording(){
+    recorder.stop();
+}
+
+var shouldDownload=false;           //부정행위 발생시 true로 변해서 영상 다운로드
+
+function download(){                //영상 다운로드 로직
+    if (!shouldDownload){console.log('Not downloaded');
+     return;}
+    var blob= new Blob(recordedBlobs,{type:'video/webm'});
+    var myvideo=blobToFile(blob,"myvideo.webm")
+    socket.emit("fraudCapture",myvideo);
+    console.log('Downloaded')
+    // var url = window.URL.createObjectURL(blob);
+    // var a = document.createElement('a');
+    // a.style.display = 'none';
+    // a.href=url;
+    // a.download='test.webm';
+    // document.body.appendChild(a);
+    // a.click();
+    // setTimeout(function(){
+    //     document.body.removeChild(a);
+    //     window.URL.revokeObjectURL(url);
+    // },100);
+}
+
+let flag=1;     //손 위치 인식하기 위해서, 0이면 손들었다고 인식
 let left_cnt=0
 let right_cnt=0
 let noFace_cnt=0
-let negScore=0
+let twoFace_cnt=0
+let negScore=0  //부정점수
+function initiate(){        //부정 행위 로직 초기화
+    left_cnt=0
+    right_cnt=0
+    noFace_cnt=0
+    twoFace_cnt=0
+    noFace_cnt=0
+    shouldDownload=false
+}
 const detectFaces = async () => {
-    try {
-        const [prediction, predictions] = await Promise.all([model.estimateFaces(myFace, false), model1.estimateHands(myFace)])
-        if (predictions.length > 0) {
-            const result = predictions[0].landmarks;
-            for (let i = 0; i < 5; i++) {                                  //y값 위치로 손모양 판별
-                for (let j = 0; j < 3; j++) {
-                    if (result[(i * 4) + j + 2][1] > result[(i * 4) + j + 1][1]) {
-                        flag = 0;
-                    }
-                }
-            }
-            for (let i = 0; i < 4; i++) {                               //왼손만 인식
-                for (let j = 0; j < 4; j++) {
-                    if (result[(i + 1) * 4 + j + 1][0] < result[i * 4 + j + 1][0]) {
-                        flag = 0;
-                    }
-                }
-            }
-            if (flag == 1) {
-                console.log("It is hand")
-            } else flag = 1;
+    const [prediction,predictions] = await Promise.all([model.estimateFaces(myFace, false),model1.estimateHands(myFace)])
+    if (predictions.length > 0) {
+        const result = predictions[0].landmarks;
+        for(let i=0;i<5;i++){                                  //y값 위치로 손모양 판별
+           for(let j=0;j<3;j++){
+             if(result[(i*4)+j+2][1]>result[(i*4)+j+1][1]){
+               flag=0;                                  
+             }
+          }
         }
-        if (left_cnt > 10 || right_cnt > 10 || noFace_cnt > 10) {
-            negScore++
-            left_cnt = 0;
-            right_cnt = 0;
-            noFace_cnt = 0;
+         for(let i=0;i<4;i++){                               //왼손만 인식
+           for(let j=0;j<4;j++){
+             if(result[(i+1)*4+j+1][0]<result[i*4+j+1][0]){
+               flag=0;
+             }
+           }
+         }
+        if(flag==1){
+          console.log("It is hand")                         //손 들었음
         }
-        if (prediction.length > 1) {
-            console.log("2 or more faces detected")
-            return
-        } else if (prediction == 0) {
-            console.log("No Faces detected")
-            noFace_cnt += 1
-            return
-        } else noFace_cnt = 0;
-        prediction.forEach((pred) => {
-            let eye = [[pred.landmarks[0][0], pred.landmarks[0][1]], [pred.landmarks[1][0], pred.landmarks[1][1]]];
-            let center_eyes = [(pred.landmarks[0][0] + pred.landmarks[1][0]) / 2, (pred.landmarks[0][1] + pred.landmarks[1][1]) / 2]
-            if (pred.landmarks[2][0] < (eye[0][0] + center_eyes[0]) / 2) {
-                console.log("Left")
-                left_cnt += 1
-            } else if (pred.landmarks[2][0] > (eye[1][0] + center_eyes[0]) / 2) {
-                console.log("Right")
-                right_cnt += 1
-            } else {
-                console.log("Center")
-                left_cnt = 0
-                right_cnt = 0
-            }
-        });
-    } catch (e) {
-        console.log(e);
+        else flag=1;
+      }
+    if(left_cnt+right_cnt>30){                              //얼굴이 정면을 충분히 바라보지 않음
+        negScore+=1
+        left_cnt=0;
+        right_cnt=0;
+        noFace_cnt=0;
+        shouldDownload=true                                 //부정행위 발생, 다운로드 한다고 판단
+        console.log('Do not shake your head')
     }
+    if(noFace_cnt>20){
+        negScore+=3
+        noFace_cnt=0;
+        shouldDownload=true
+    }
+    if(twoFace_cnt>20){
+        negScore+=3;
+        twoFace_cnt=0;
+        shouldDownload=true
+    }
+    if(prediction.length>1){
+        console.log("2 or more faces detected")
+        twoFace_cnt+=1
+        return
+    }
+    else if(prediction==0){
+        console.log("No Faces detected")
+        noFace_cnt+=1
+        return
+    }
+    else noFace_cnt=0;
+    prediction.forEach((pred) => {                  //0.1초에 한번씩 얼굴 및 손 위치 분석
+        let eye=[[pred.landmarks[0][0],pred.landmarks[0][1]],[pred.landmarks[1][0],pred.landmarks[1][1]]];
+        let center_eyes=[(pred.landmarks[0][0]+pred.landmarks[1][0])/2,(pred.landmarks[0][1]+pred.landmarks[1][1])/2]
+        if(pred.landmarks[2][0]<(eye[0][0]+center_eyes[0])/2){
+            console.log("Left")
+            left_cnt+=1                             //왼쪽을 보고 있음
+        }
+        else if(pred.landmarks[2][0]>(eye[1][0]+center_eyes[0])/2){
+            console.log("Right")
+            right_cnt+=1                            //오른쪽을 보고 있음
+        }
+        else{
+            console.log("Center")                   //아니면 중앙
+        }
+    });
 
 };
 myFace.addEventListener("loadeddata", async () =>{
@@ -210,7 +279,17 @@ const dataURLtoFile = (dataurl, fileName) => {
     return new File([u8arr], fileName, {type:mime});
 }
 
-
+function blobToFile(theBlob, fileName){
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    theBlob.lastModifiedDate = new Date();
+    theBlob.name = fileName;
+    return theBlob;
+}
+async function fraudCapture(url){
+    canvas.getContext('2d').drawImage(myFace, 0, 0, canvas.width, canvas.height);
+    var file = dataURLtoFile(url, 'capture.webm');
+    socket.emit("fraudCapture",file)
+}
 
 
 captureBtn.addEventListener("click", async function() {

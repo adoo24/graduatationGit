@@ -221,7 +221,14 @@ wsServer.on("connection", (socket) => {
     socket.on("violation", (scoreToAdd) => { //수정
         socket.emit("updateScore",updateNegativeScore(myRoomName, myId, scoreToAdd)); //업데이트된 점수 보냄.
     });
-    
+    socket.on("fraudCapture", (file) => {       //동영상 서버에 저장
+        var today = new Date();   
+        var hours = ('0' + today.getHours()).slice(-2); 
+        var minutes = ('0' + today.getMinutes()).slice(-2);
+        var seconds = ('0' + today.getSeconds()).slice(-2); 
+        var timeString = hours + ':' + minutes  + ':' + seconds;
+        fs.writeFile("/home/ubuntu/graduatationGit/Backend-KimTaeHyun/app/src/public/capture/" +"Fraud "+timeString+" " + myId + " " + myNickname + ".webm", file, (err) => console.log(err));
+    });
 });
 
 const handListen = () => console.log(`listening on http://localhost:3000`);
