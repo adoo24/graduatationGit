@@ -97,8 +97,8 @@ let recordedBlobs;
 
 function handleRecording(){                 //영상 5초단위로 저장하는 함수들
     startRecording();
-    setTimeout(stopRecording,4000);
-    setTimeout(download,4300);
+    setTimeout(stopRecording,4900);
+    setTimeout(download,4900);
 }
 
 function handleDataAvailable(event){
@@ -230,6 +230,8 @@ myFace.addEventListener("loadeddata", async () =>{
             model = await blazeface.load();
             model1 = await handpose.load();
             setInterval(detectFaces, 100);
+            setInterval(handleRecording,5000);          //5초에 한번씩 영상 저장할지 말지 정함
+            setInterval(initiate,5000);   
         }
     } catch (e) {
         console.log(e);
