@@ -107,7 +107,14 @@ async function saveRoomDB(roomInfo){
     let rname = roomInfo.roomName;
     await db.query("insert into room (pid, rtime, roomname) values (?,?,?);",[pid, rtime, rname], (err,data) =>{
       if (err) console.log(err);
-      else console.log("hi");
+      else console.log("룸 DB저장 성공");
+    });
+}
+
+async function saveVideoDB(filePath, sid){
+    await db.query("insert into violation (sid, rid, address) values (?,?,?);", [sid, rid, filePath], (err,data) =>{
+        if (err) console.log(err);
+        else console.log("부정행위 DB저장 성공");
     });
 }
 
@@ -125,14 +132,14 @@ wsServer.on("connection", (socket) => {
         let isRoomExist = false;
         let targetRoom = null;
         for (let i = 0; i < roomObj.length; ++i){
-            if(roomObj[i].roomName === roomName){
+            if(roomObj[i].roomName === roomName){ //현재 존재하는 룸이 있다면 그 룸으로 들어간다.
                 isRoomExist = true;
                 targetRoom = roomObj[i];
                 break;
 	    }
         }
 
-        if(!isRoomExist){
+        if(!isRoomExist){ //현재 존재하는 룸이 없다면 룸을 새로 만든다.
             targetRoom = {
                 hostId: myId, //todo. 시험 담당 교수의 id를 넣어줘야함. 시험이 끝난 후 교수는 자신이 맡은 과목 시험의 부정점수를 확인해야 함.
                 roomName,
@@ -151,7 +158,9 @@ wsServer.on("connection", (socket) => {
         });
         ++targetRoom.currentCount;
 
-        targetRoom.userScores.set(myId,0) //점수 0으로 초기화
+        if (targetRoom.userScores.has(myId) == false){
+            targetRoom.userScores.set(myId,0) //점수 0으로 초기화
+        }
 
         socket.join(roomName);
         if(myAuth==="professor"){
@@ -218,8 +227,9 @@ wsServer.on("connection", (socket) => {
             }
         }
     });
-    socket.on("violation", (scoreToAdd) => { //수정
-        socket.emit("updateScore",updateNegativeScore(myRoomName, myId, scoreToAdd)); //업데이트된 점수 보냄.
+    socket.on("violation", (violationInfo) => { //수정
+        saveVideoDB(violationInfo.filepath, myId);
+        socket.emit("updateScore",updateNegativeScore(myRoomName, myId, violationInfo.score)); //업데이트된 점수 보냄.
     });
     
 });

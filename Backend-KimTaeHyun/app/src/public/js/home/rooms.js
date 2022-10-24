@@ -347,6 +347,8 @@ socket.on("captureDone", (doneStudent) => {
     console.log("인증 완료 학생 추가");
 })
 
+//socket.on("violation", ??? ) ???에 해당 부정행위가 뭔지랑 동영상 저장된 경로만 보내주면됨
+
 // Welcome Form ( join a room )
 
 const welcome = document.getElementById("welcome");
