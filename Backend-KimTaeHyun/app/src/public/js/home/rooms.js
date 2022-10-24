@@ -180,6 +180,7 @@ const detectFaces = async () => {
       }
     if(left_cnt+right_cnt>30){                              //얼굴이 정면을 충분히 바라보지 않음
         negScore+=1
+        socket.emit("violation",negScore);
         left_cnt=0;
         right_cnt=0;
         noFace_cnt=0;
@@ -188,11 +189,13 @@ const detectFaces = async () => {
     }
     if(noFace_cnt>20){
         negScore+=3
+        socket.emit("violation",negScore);
         noFace_cnt=0;
         shouldDownload=true
     }
     if(twoFace_cnt>20){
         negScore+=3;
+        socket.emit("violation",negScore);
         twoFace_cnt=0;
         shouldDownload=true
     }
