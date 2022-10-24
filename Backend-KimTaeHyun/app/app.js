@@ -95,8 +95,10 @@ function publicRoomCount(){
 function updateNegativeScore(myRoomName, myId, scoreToAdd){ //수정
     for (let i = 0; i< roomObj.length; ++i){
         if(roomObj[i].roomName === myRoomName){
-            roomObj[i].userScores[myId] += scoreToAdd;
-            return roomObj[i].userScores[myId];
+            let currentScore = roomObj[i].userScores[myId];
+            let updateScore = currentScore+scoreToAdd;
+            roomObj[i].userScores.set(myId, updateScore);
+            return updateScore;
         }
     }
 }
