@@ -97,8 +97,8 @@ let recordedBlobs;
 
 function handleRecording(){                 //영상 5초단위로 저장하는 함수들
     startRecording();
-    setTimeout(stopRecording,4900);
-    setTimeout(download,4900);
+    setTimeout(stopRecording,4000);
+    setTimeout(download,4300);
 }
 
 function handleDataAvailable(event){
