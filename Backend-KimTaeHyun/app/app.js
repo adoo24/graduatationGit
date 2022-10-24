@@ -95,9 +95,10 @@ function publicRoomCount(){
 function updateNegativeScore(myRoomName, myId, scoreToAdd){ //수정
     for (let i = 0; i< roomObj.length; ++i){
         if(roomObj[i].roomName === myRoomName){
-            let currentScore = roomObj[i].userScores[myId];
+            let currentScore = roomObj[i].userScores.get(myId);
             let updateScore = currentScore+scoreToAdd;
             roomObj[i].userScores.set(myId, updateScore);
+            console.log(myRoomName, myId, "의 현재점수: ", updateScore);
             return updateScore;
         }
     }
@@ -162,6 +163,7 @@ wsServer.on("connection", (socket) => {
 
         if (targetRoom.userScores.has(myId) == false){
             targetRoom.userScores.set(myId,0) //점수 0으로 초기화
+            console.log("유저점수 생성 완료" , targetRoom.userScores.get(myId));
         }
 
         socket.join(roomName);
