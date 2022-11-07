@@ -257,17 +257,16 @@ wsServer.on("connection", (socket) => {
     });
 
     socket.on("logout", () => {
-        let sess = req.session;
-        if(sess.uid){
-            req.session.destroy(function(err){
+        if(toDestory.uid){
+            toDestory.destroy(function(err){
                 if(err){
                     console.log(err);
                 }else{
-                    res.redirect('/');
+                    location.href('/login')
                 }
             })
         }else{
-            res.redirect('/');
+            location.href('/login');
         }
     })
 });
