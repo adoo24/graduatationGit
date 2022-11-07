@@ -14,6 +14,7 @@ const call = document.getElementById("call");
 call.hidden = true;
 canvas.hidden = true;
 let myStream;
+let onlyStream;
 let muted = false;
 let cameraOff = false;
 let roomName = "";
@@ -59,7 +60,6 @@ async function getCameras(){
 // 오디오와 비디오를 가져오는 함수 
 
 async function getMedia(deviceId){
-    let onlyStream = null;
     //
     const myInitialConstrains = {
         audio: false,
@@ -96,11 +96,14 @@ async function getMedia(deviceId){
 }
 let recorder;
 let recordedBlobs;
+const wait = (timeToDelay) => new Promise((resolve)=> setTimeout(resolve, timeToDelay))
 
-function handleRecording(){                 //영상 5초단위로 저장하는 함수들
-    startRecording();
-    setTimeout(stopRecording,4900);
-    setTimeout(download,4900);
+
+async function handleRecording(){                 //영상 5초단위로 저장하는 함수들
+    await startRecording();
+    await wait(4500)
+    await stopRecording()
+    download()
 }
 
 function handleDataAvailable(event){
@@ -109,21 +112,24 @@ function handleDataAvailable(event){
     }
 }
 
-function startRecording(){
+
+async function startRecording(){
     recordedBlobs=[];
     var options ={mimeType: 'video/webm'};
     recorder=new MediaRecorder(myFace.srcObject,options);
+    console.log("recorder started")
     recorder.ondataavailable = handleDataAvailable;
     recorder.start(10);
 }
 
-function stopRecording(){
+async function stopRecording(){
     recorder.stop();
+    console.log("recorder stopped")
 }
 
 var shouldDownload=false;           //부정행위 발생시 true로 변해서 영상 다운로드
 
-function download(){                //영상 다운로드 로직
+async function download(){                //영상 다운로드 로직
     if (!shouldDownload){console.log('Not downloaded');
      return;}
     var blob= new Blob(recordedBlobs,{type:'video/webm'});
@@ -229,18 +235,18 @@ const detectFaces = async () => {
 
 };
 myFace.addEventListener("loadeddata", async () =>{
-    try {
-        if (auth == "student") {
-            model = await blazeface.load();
-            model1 = await handpose.load();
-            setInterval(detectFaces, 100);
-            setInterval(handleRecording,5000);          //5초에 한번씩 영상 저장할지 말지 정함
-            setInterval(initiate,5000);   
-        }
-    } catch (e) {
-        console.log(e);
-    }
-});
+     try {
+         if (auth == "student") {
+             model = await blazeface.load();
+             model1 = await handpose.load();
+             setInterval(detectFaces, 100);
+             setInterval(handleRecording,5000);          //5초에 한번씩 영상 저장할지 말지 정함
+             setInterval(initiate,5000);   
+         }
+     } catch (e) {
+         console.log(e);
+     }
+ });
 // 뮤트
 
 function handleMuteClick() {
