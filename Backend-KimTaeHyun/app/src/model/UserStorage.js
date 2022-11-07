@@ -44,6 +44,7 @@ class UserStorage {
                     resolve({id: data[0].id, psword: data[0].password,
                             nickname : data[0].name, auth: "student",
                             face1: data[0].face1, face2: data[0].face2});
+                    console.log("하위 로그는 UserStorage");
                     console.log({id: data[0].id, psword: data[0].password,
                         nickname: data[0].name, auth: "student",
                     face1: data[0].face1, face2: data[0].face2});
