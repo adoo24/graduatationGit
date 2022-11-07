@@ -51,7 +51,7 @@ class User{
         }
         if (session.isLogined == true) { //login이 호출되는 시점에 session이 살아있다면 이 메세지가 나가는지 테스트
             console.log('이미 로그인되어 미팅룸 페이지로 이동');
-            return {success: true };
+            return {success: true, id: uId, nickname: uNickname, auth: uAuth, face1: uFace1, face2: uFace2 };
         }
         else if(uId){ //id는 맞는데 비번이 틀린경우
             if (uId === client.id && uPsword === client.psword){
