@@ -32,7 +32,7 @@ let pcObj = {
 
 // 카메라를 찾는 함수
 
-logOutBtn.addEventListener("click", () -> {
+logOutBtn.addEventListener("click", () => {
      socket.emit("logout");
 })
 
@@ -95,26 +95,30 @@ async function getMedia(deviceId){
     }
 }
 let recorder;
-let recordedBlobs;
+let recordedBlobs=[];
+recordedBlobs[0]=[];
+recordedBlobs[1]=[];
+let state=0;
 const wait = (timeToDelay) => new Promise((resolve)=> setTimeout(resolve, timeToDelay))
 
 
 async function handleRecording(){                 //영상 5초단위로 저장하는 함수들
+    state=state^1
     await startRecording();
-    await wait(4500)
+    await wait(5000)
     await stopRecording()
     download()
 }
 
 function handleDataAvailable(event){
     if (event.data && event.data.size>0){
-        recordedBlobs.push(event.data);
+        recordedBlobs[state].push(event.data);
     }
 }
 
 
 async function startRecording(){
-    recordedBlobs=[];
+    recordedBlobs[state]=[];
     var options ={mimeType: 'video/webm'};
     recorder=new MediaRecorder(myFace.srcObject,options);
     console.log("recorder started")
@@ -132,7 +136,7 @@ var shouldDownload=false;           //부정행위 발생시 true로 변해서 �
 async function download(){                //영상 다운로드 로직
     if (!shouldDownload){console.log('Not downloaded');
      return;}
-    var blob= new Blob(recordedBlobs,{type:'video/webm'});
+    var blob= new Blob(recordedBlobs[state],{type:'video/webm'});
     var myvideo=blobToFile(blob,"myvideo.webm")
     socket.emit("fraudCapture",myvideo);
     console.log('Downloaded')
