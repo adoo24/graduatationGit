@@ -31,9 +31,12 @@ let pcObj = {
 
 // 카메라를 찾는 함수
 
-function logout(){
+// logOutBtn.addEventListener("click", () -> {
+//     schoolid
+//     hoe
+// })
 
-}
+
 
 async function getCameras(){
     try{

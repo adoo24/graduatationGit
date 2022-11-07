@@ -4,9 +4,8 @@
     <list default="true" id="835868af-2d35-4a9e-bc99-a12c7d9ae458" name="Changes" comment="&quot;package.json 충돌 해결&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/jIhpB2-4YlhAbhhWs7CvLtA6LqXKn8oQ.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/jlKcqqKUqArTFnKFE2S3YEz6bhv9PCFq.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/sessions/oYM1v6MdkS8FHXH1YbzI4PBGOafXwXF5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/rooms.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/public/js/home/rooms.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/routes/home/home.ctrl.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/src/routes/home/home.ctrl.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +122,7 @@
       <workItem from="1666601277242" duration="2436000" />
       <workItem from="1666613304830" duration="14955000" />
       <workItem from="1667736275429" duration="611000" />
-      <workItem from="1667795680909" duration="5735000" />
+      <workItem from="1667795680909" duration="9473000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;package.json 충돌 해결&quot;">
       <created>1652191052369</created>

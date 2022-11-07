@@ -16,7 +16,7 @@ const output = {
         res.render("home/index");
     },
     login: (req, res) => {
-        // if (req.session.isLogined === true){
+        // if (req.session.disLogine === true){
         //     res.redirect('/rooms') //session 유지 테스트
         // } else
         res.render("home/login");
