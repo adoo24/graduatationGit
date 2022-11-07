@@ -17,6 +17,7 @@ var tmpauth;
 var tmpname;
 var tmpPath1;
 var tmpPath2;
+var toDestory;
 
 // Certificate 인증서 경로
 const privateKey = fs.readFileSync('/etc/letsencrypt/live/bemysupervisor.com/privkey.pem', 'utf8');
@@ -66,8 +67,10 @@ app.get('/rooms', (req, res) =>{
     tmpname = req.session.nickname;
     tmpPath1 = req.session.face1;
     tmpPath2 = req.session.face2;
+    toDestory = req.session;
     res.render('home/rooms')
 });
+
 
 let roomObj = [
     // {
@@ -252,6 +255,21 @@ wsServer.on("connection", (socket) => {
         fs.writeFile(filePath, file,  (err) => {if (err) console.log(err)});
         saveVideoDB(filePath, myId, myRoomName);
     });
+
+    socket.on("logout", () => {
+        let sess = req.session;
+        if(sess.uid){
+            req.session.destroy(function(err){
+                if(err){
+                    console.log(err);
+                }else{
+                    res.redirect('/');
+                }
+            })
+        }else{
+            res.redirect('/');
+        }
+    })
 });
 
 const handListen = () => console.log(`listening on http://localhost:3000`);

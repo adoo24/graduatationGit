@@ -31,10 +31,9 @@ let pcObj = {
 
 // 카메라를 찾는 함수
 
-// logOutBtn.addEventListener("click", () -> {
-//     schoolid
-//     hoe
-// })
+logOutBtn.addEventListener("click", () -> {
+     socket.emit("logout");
+})
 
 
 
