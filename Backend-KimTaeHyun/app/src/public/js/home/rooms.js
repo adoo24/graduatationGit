@@ -95,14 +95,16 @@ async function getMedia(deviceId){
         console.log(e);
     }
 }
-let recorder=new MediaRecorder(myFace.srcObject,options);;
+let recorder;
 let recordedBlobs;
+const wait = (timeToDelay) => new Promise((resolve)=> setTimeout(resolve, timeToDelay))
 
-var options ={mimeType: 'video/webm'};
 
 async function handleRecording(){                 //영상 5초단위로 저장하는 함수들
-    startRecording();
-    setTimeout(down,4500);
+    await startRecording();
+    await wait(4500)
+    await stopRecording()
+    download()
 }
 
 function handleDataAvailable(event){
@@ -111,13 +113,11 @@ function handleDataAvailable(event){
     }
 }
 
-async function down(){
-    await stopRecording()
-    download()
-}
 
 async function startRecording(){
     recordedBlobs=[];
+    var options ={mimeType: 'video/webm'};
+    recorder=new MediaRecorder(myFace.srcObject,options);
     console.log("recorder started")
     recorder.ondataavailable = handleDataAvailable;
     recorder.start(10);
