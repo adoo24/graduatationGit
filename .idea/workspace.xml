@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="835868af-2d35-4a9e-bc99-a12c7d9ae458" name="Changes" comment="&quot;package.json 충돌 해결&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/app/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/app/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-KimTaeHyun/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-KimTaeHyun/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,7 +118,9 @@
       <workItem from="1666268425481" duration="2428000" />
       <workItem from="1666427182414" duration="8109000" />
       <workItem from="1666601277242" duration="2436000" />
-      <workItem from="1666613304830" duration="13522000" />
+      <workItem from="1666613304830" duration="14955000" />
+      <workItem from="1667736275429" duration="611000" />
+      <workItem from="1667795680909" duration="1083000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;package.json 충돌 해결&quot;">
       <created>1652191052369</created>

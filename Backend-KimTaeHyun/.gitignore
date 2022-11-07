@@ -43,6 +43,9 @@ jspm_packages/
 *package.json
 *package-lock.json
 db.js
+*.PNG
+*.jpg
+*.webm
 
 # TypeScript v1 declaration files
 typings/
