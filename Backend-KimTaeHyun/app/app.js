@@ -47,10 +47,10 @@ app.use(expressSession({
     resave : false,
     saveUninitialized: true,
     store: new FileStore(),
-    cookie: {
-        domain: 'bemysupervisor.com', path:'/',
-        expires: new Date(Date.now() + 3600000)
-    }
+    // cookie: {
+    //     domain: 'bemysupervisor.com', path:'/',
+    //     expires: new Date(Date.now() + 3600000)
+    // }
 }));
 //라우팅
 const home = require("./src/routes/home");
