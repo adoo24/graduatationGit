@@ -36,6 +36,7 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
     login: async (req, res) => {
         const user = new User(req); //req 파라미터로 user 객체 생성. req 안에는 id,psword가 json객체로 묶여있음.
         const response = await user.login(); //login함수 실행. 로그인 로직(db와 비교)처리 후 success t/f를 리턴
+        console.log("로그인 프로세스");
         console.log(response);
         if (response.success){
             req.session.isLogined = true;
