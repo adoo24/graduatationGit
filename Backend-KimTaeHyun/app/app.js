@@ -262,11 +262,11 @@ wsServer.on("connection", (socket) => {
                 if(err){
                     console.log(err);
                 }else{
-                    location.href('/login')
+                    console.log("go to mainpage");
                 }
             })
         }else{
-            location.href('/login');
+            console.log("go to mainpage");
         }
     })
 });

@@ -33,7 +33,9 @@ let pcObj = {
 // 카메라를 찾는 함수
 
 logOutBtn.addEventListener("click", () => {
-     socket.emit("logout");
+    socket.emit("logout");
+    document.location.replace('/');
+    console.log("go to main page");
 })
 
 
@@ -244,8 +246,8 @@ myFace.addEventListener("loadeddata", async () =>{
              model = await blazeface.load();
              model1 = await handpose.load();
              setInterval(detectFaces, 100);
-             setInterval(handleRecording,5000);          //5초에 한번씩 영상 저장할지 말지 정함
-             setInterval(initiate,5000);   
+             setInterval(handleRecording,10000);          //5초에 한번씩 영상 저장할지 말지 정함
+             setInterval(initiate,10000);   
          }
      } catch (e) {
          console.log(e);
