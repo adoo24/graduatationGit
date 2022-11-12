@@ -269,6 +269,13 @@ wsServer.on("connection", (socket) => {
             console.log("go to mainpage");
         }
     })
+
+    socket.on("startTest", () => {
+        socket.to(myRoomName).emit("modelOn");
+    });
+    socket.on("finishTest", () => {
+        socket.to(myRoomName).emit("modelOff");
+    });
 });
 
 const handListen = () => console.log(`listening on http://localhost:3000`);

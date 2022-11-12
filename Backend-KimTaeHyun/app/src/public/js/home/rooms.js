@@ -5,6 +5,7 @@ const muteBtn = document.getElementById("mute");
 const cameraBtn = document.getElementById("camera");
 const cameraSelect = document.getElementById("cameras");
 const captureBtn = document.getElementById("capture");
+const testBtn = document.getElementById("test");
 const canvas = document.getElementById("canvas");
 const logOutBtn = document.getElementById("logout");
 
@@ -17,6 +18,7 @@ let myStream;
 let onlyStream;
 let muted = false;
 let cameraOff = false;
+let testing = false;
 let roomName = "";
 let nickname = "";
 let myPeerConnection;
@@ -25,6 +27,9 @@ let auth = "";
 let schoolid = "";
 let path1 = ""
 let path2 = ""
+let interval1;
+let interval2;
+let interval3;
 
 let pcObj = {
 
@@ -245,9 +250,9 @@ myFace.addEventListener("loadeddata", async () =>{
          if (auth == "student") {
              model = await blazeface.load();
              model1 = await handpose.load();
-             setInterval(detectFaces, 100);
-             setInterval(handleRecording,10000);          //5초에 한번씩 영상 저장할지 말지 정함
-             setInterval(initiate,10000);   
+             //setInterval(detectFaces, 100);
+             //setInterval(handleRecording,10000);          //5초에 한번씩 영상 저장할지 말지 정함
+             //setInterval(initiate,10000);   
          }
      } catch (e) {
          console.log(e);
@@ -279,6 +284,50 @@ function handleCameraClick() {
         cameraOff = true;
     }
 }
+
+// 테스트 시작 / 종료
+
+function handleTestClick() {
+    if(testing) {
+        testBtn.innerText = "test start";
+        testing = false;
+        writeChat("시험을 종료합니다");
+        socket.emit("finishTest");
+    } else {
+        testBtn.innerText = "test finish";
+        testing = true;
+        writeChat("시험을 시작합니다");
+        socket.emit("startTest");
+    }
+}
+
+socket.on("modelOn", () => {
+    writeChat("시험을 시작합니다");
+    console.log("시험시작");
+    try {
+        if (auth == "student") {
+            interval1 = setInterval(detectFaces, 100);
+            interval2 = setInterval(handleRecording,10000);          //5초에 한번씩 영상 저장할지 말지 정함
+            interval3 = setInterval(initiate,10000);   
+        }
+    } catch (e) {
+        console.log(e);
+    }
+});
+
+socket.on("modelOff", () => {
+    writeChat("시험을 종료합니다");
+    console.log("시험 종료");
+    try {
+        if (auth = "student") {
+            clearInterval(interval1);
+            clearInterval(interval2);
+            clearInterval(interval3);
+        }
+    } catch (e) {
+        console.log(e);
+    }
+});
 
 // 캡쳐
 
@@ -392,6 +441,7 @@ async function handleCameraChange(){
 
 muteBtn.addEventListener("click", handleMuteClick);
 cameraBtn.addEventListener("click", handleCameraClick);
+testBtn.addEventListener("click", handleTestClick);
 cameraSelect.addEventListener("input", handleCameraChange);
 
 // Chatting room
@@ -548,6 +598,7 @@ socket.on("studentInfo", async(myId, myNickname, myAuth, myPath1, myPath2) => {
     const nicknameContainer = document.querySelector("#userNickname");
     nicknameContainer.innerText = nickname;
     studentBox.hidden = true;
+    testBtn.hidden = true;
 });
 
 socket.on("professorInfo", async(myId, myNickname, myAuth) => {
