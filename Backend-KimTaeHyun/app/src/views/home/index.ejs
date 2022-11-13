@@ -3,11 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/heroes/">
+    <link href="/css/home/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/home/heroes.css" rel="stylesheet">
     <title>감독을 부탁해</title>
+    <style>
+        .bd-placeholder-img {
+          font-size: 1.125rem;
+          text-anchor: middle;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          user-select: none;
+        }
+  
+        @media (min-width: 768px) {
+          .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+          }
+        }
+      </style>
 </head>
 <body>
-<h1>감독을 부탁해</h1>
-<button onclick="location.href='/register'">회원 가입</button>
-<button onclick="location.href='/login'">로그인</button>
+<div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="/design/online.png" alt="" width="100" height="100">
+    <h1 class="display-5 fw-bold">감독을 부탁해</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">부정행위 감지를 위한 차세대 AI 감독 서비스</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <button type="button" onclick="location.href='/register'" class="btn btn-primary btn-lg px-4 me-sm-3">회원가입</button>
+        <button type="button" onclick="location.href='/login'"class="btn btn-outline-secondary btn-lg px-4">로그인</button>
+      </div>
+    </div>
+  </div>
 </body>
+<script src="/js/home/jquery-3.6.1.min.js"></script>
+<script src="/js/home/bootstrap.min.js"></script>
 </html>

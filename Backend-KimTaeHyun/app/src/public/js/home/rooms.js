@@ -30,10 +30,15 @@ let path2 = ""
 let interval1;
 let interval2;
 let interval3;
+let professorSocket;
+let changeForm;
+let changeValue;
 
 let pcObj = {
 
 };
+
+let studentList = {};
 
 // 카메라를 찾는 함수
 
@@ -112,7 +117,7 @@ const wait = (timeToDelay) => new Promise((resolve)=> setTimeout(resolve, timeTo
 async function handleRecording(){                 //영상 5초단위로 저장하는 함수들
     state=state^1
     await startRecording();
-    await wait(5000)
+    await wait(4900)
     await stopRecording()
     download()
 }
@@ -198,7 +203,7 @@ const detectFaces = async () => {
       }
     if(left_cnt+right_cnt>30){                              //얼굴이 정면을 충분히 바라보지 않음
         negScore = 1
-        socket.emit("violation",negScore);
+        socket.emit("violation",negScore, professorSocket);
         left_cnt=0;
         right_cnt=0;
         noFace_cnt=0;
@@ -207,13 +212,13 @@ const detectFaces = async () => {
     }
     if(noFace_cnt>20){
         negScore = 3
-        socket.emit("violation",negScore);
+        socket.emit("violation",negScore, professorSocket);
         noFace_cnt=0;
         shouldDownload=true
     }
     if(twoFace_cnt>20){
         negScore = 3;
-        socket.emit("violation",negScore);
+        socket.emit("violation",negScore, professorSocket);
         twoFace_cnt=0;
         shouldDownload=true
     }
@@ -307,8 +312,8 @@ socket.on("modelOn", () => {
     try {
         if (auth == "student") {
             interval1 = setInterval(detectFaces, 100);
-            interval2 = setInterval(handleRecording,10000);          //5초에 한번씩 영상 저장할지 말지 정함
-            interval3 = setInterval(initiate,10000);   
+            interval2 = setInterval(handleRecording,5000);          //5초에 한번씩 영상 저장할지 말지 정함
+            interval3 = setInterval(initiate,5000);   
         }
     } catch (e) {
         console.log(e);
@@ -691,6 +696,12 @@ socket.on("room_change", (rooms, roomCount) => {
     }
 });
 
+// 변경된 점수 받기
+socket.on("updateScore", (remoteSocketId, updateScore) => {
+    studentList[remoteSocketId] = updateScore;
+    document.getElementById(remoteSocketId).childNodes[2].innerText = updateScore;
+});
+
 // RTC Code
 
 async function makeConnection (remoteSocketId, remoteNickname, remoteAuth) {
@@ -715,22 +726,25 @@ async function makeConnection (remoteSocketId, remoteNickname, remoteAuth) {
     console.log(remoteAuth);
     if (auth === 'professor'){
         myPeerConnection.addEventListener("addstream", (event) => {
-            handleAddStream(event, remoteSocketId, remoteNickname);
+            handleAddStream(event, remoteSocketId, remoteNickname, remoteAuth);
         });
         myStream
           .getTracks()
           .forEach((track) => myPeerConnection.addTrack(track, myStream));
         if (remoteAuth == 'student'){
             insertStudent(remoteNickname);
+            studentList[remoteSocketId] = 0;
         }
     }
     else if (remoteAuth === 'professor'){
         myPeerConnection.addEventListener("addstream", (event) => {
-            handleAddStream(event, remoteSocketId, remoteNickname);
+            handleAddStream(event, remoteSocketId, remoteNickname, remoteAuth);
         });
         myStream
           .getTracks()
           .forEach((track) => myPeerConnection.addTrack(track, myStream));
+        professorSocket = remoteSocketId;
+        console.log(`상대 소켓 아이디는 ${professorSocket}`);
     }
 
     
@@ -747,12 +761,12 @@ function handleIce(event, remoteSocketId){
     }
 }
 
-function handleAddStream(event, remoteSocketId, remoteNickname){
+function handleAddStream(event, remoteSocketId, remoteNickname, remoteAuth){
     const peerStream = event.stream;
-    paintPeerFace(peerStream, remoteSocketId, remoteNickname);
+    paintPeerFace(peerStream, remoteSocketId, remoteNickname, remoteAuth);
 }
 
-function paintPeerFace(peerStream, id, remoteNickname){
+function paintPeerFace(peerStream, id, remoteNickname, remoteAuth){
     const streams = document.querySelector("#streams");
     const div = document.createElement("div");
     div.id = id;
@@ -765,9 +779,14 @@ function paintPeerFace(peerStream, id, remoteNickname){
     const nicknameContainer = document.createElement("h3");
     nicknameContainer.id = "userNickname";
     nicknameContainer.innerText = remoteNickname;
-    
     div.appendChild(video);
     div.appendChild(nicknameContainer);
+    if (remoteAuth != 'professor') {
+        const scoreContainer = document.createElement("h3");
+        scoreContainer.id = "userNegScore"
+        scoreContainer.innerText = 0;
+        div.appendChild(scoreContainer);
+    }
     streams.appendChild(div);
 }
 
