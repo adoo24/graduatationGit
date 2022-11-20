@@ -118,9 +118,8 @@ const wait = (timeToDelay) => new Promise((resolve)=> setTimeout(resolve, timeTo
 async function handleRecording(){                 //영상 5초단위로 저장하는 함수들
     state=(state+1)%10
     await startRecording();
-    await wait(4400)
+    await wait(4900)
     await stopRecording()
-    await wait(300)
     download()
 }
 
@@ -149,12 +148,12 @@ async function stopRecording(){
 var shouldDownload=false;           //부정행위 발생시 true로 변해서 영상 다운로드
 
 async function download(){                //영상 다운로드 로직
-    if (!shouldDownload){console.log('Not downloaded',recordedBlobs[state],state);
+    if (!shouldDownload){console.log('Not downloaded',state);
      return;}
     var blob= new Blob(recordedBlobs[state],{type:'video/webm'});
-    var myvideo=await blobToFile(blob,"myvideo.webm")
+    var myvideo=blobToFile(blob,"myvideo.webm")
     socket.emit("fraudCapture",myvideo);
-    console.log('Downloaded',recordedBlobs[state],state)
+    console.log('Downloaded',state)
     // var url = window.URL.createObjectURL(blob);
     // var a = document.createElement('a');
     // a.style.display = 'none';
@@ -182,7 +181,28 @@ function initiate(){        //부정 행위 로직 초기화
     shouldDownload=false
 }
 const detectFaces = async () => {
-    const [prediction] = await Promise.all([model.estimateFaces(myFace, false)])
+    const [prediction,predictions] = await Promise.all([model.estimateFaces(myFace, false),model1.estimateHands(myFace)])
+    if (predictions.length > 0) {
+        const result = predictions[0].landmarks;
+        for(let i=0;i<5;i++){                                  //y값 위치로 손모양 판별
+           for(let j=0;j<3;j++){
+             if(result[(i*4)+j+2][1]>result[(i*4)+j+1][1]){
+               flag=0;                                  
+             }
+          }
+        }
+         for(let i=0;i<4;i++){                               //왼손만 인식
+           for(let j=0;j<4;j++){
+             if(result[(i+1)*4+j+1][0]<result[i*4+j+1][0]){
+               flag=0;
+             }
+           }
+         }
+        if(flag==1){
+          console.log("It is hand")                         //손 들었음
+        }
+        else flag=1;
+      }
     if(left_cnt+right_cnt>30){                              //얼굴이 정면을 충분히 바라보지 않음
         negScore = 1
         socket.emit("violation",negScore, professorSocket);
@@ -236,6 +256,7 @@ myFace.addEventListener("loadeddata", async () =>{
      try {
          if (auth == "student") {
              model = await blazeface.load();
+             model1 = await handpose.load();
              //setInterval(detectFaces, 100);
              //setInterval(handleRecording,10000);          //5초에 한번씩 영상 저장할지 말지 정함
              //setInterval(initiate,10000);   
