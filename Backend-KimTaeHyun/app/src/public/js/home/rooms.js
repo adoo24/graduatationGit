@@ -48,8 +48,6 @@ logOutBtn.addEventListener("click", () => {
     console.log("go to main page");
 })
 
-
-
 async function getCameras(){
     try{
         const devices = await navigator.mediaDevices.enumerateDevices();

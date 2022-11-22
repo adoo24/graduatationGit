@@ -75,11 +75,30 @@ class UserStorage {
                         if (err) {
                             reject(`${err}`);
                         } else{
-                            resolve({success: true});
+                            resolve(data);
                         }
                     })
             })
         }
+    }
+
+    static async getUserViolation(userID){
+        return new Promise((resolve,reject) =>{
+            db.query("select address, vtime from violation where sid = ?;", [userID]
+                , (err, data) => {
+                    if (err){
+                        reject(`${err}`)
+                    } else {
+                        var address = new Array();
+                        var vTime = new Array();
+                        for (let i = 0; i< data.length(); ++i){
+                            address.push(data[i].address);
+                            vTime.push(data[i].vtime);
+                        }
+                        return {address: address, time: vTime};
+                    }
+                })
+        })
     }
 }
 

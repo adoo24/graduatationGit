@@ -74,6 +74,17 @@ class User{
         }
         return response;
     }
+
+    async getViolationInfo(){
+        const client = this.body;
+        try {
+            let violationInfos = await UserStorage.getViolationInfo(client);
+            console.log(violationInfos);
+        } catch(error){
+            console.log("쿼리 오류");
+        }
+    }
+
 }
 
 module.exports = User;
