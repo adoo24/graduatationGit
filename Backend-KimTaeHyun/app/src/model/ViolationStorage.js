@@ -13,7 +13,7 @@ class ViolationStorage{
                     } else {
                         var address = new Array();
                         var vTime = new Array();
-                        for (let i = 0; i< data.length(); ++i){
+                        for (let i = 0; i< data.length; ++i){
                             address.push(data[i].address);
                             vTime.push(data[i].vtime);
                         }

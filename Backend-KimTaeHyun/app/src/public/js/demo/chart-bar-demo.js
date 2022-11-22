@@ -30,6 +30,11 @@ var ctx,myBarChart;
 // Bar Chart Example
   var students;
   var scores;
+var roomName;
+window.onload=function loadRoomName(){
+  roomName=new URLSearchParams(location.search).get('roomName');
+}
+
 
 function start(){
   ctx = document.getElementById("myBarChart");
@@ -42,7 +47,7 @@ function start(){
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(req), //´Ü¼øÈ÷ ¹®ÀÚ¿­·Î ¹Ù²Ù´Â ¸Þ¼Òµå
+    body: JSON.stringify(req), //ï¿½Ü¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½Ù²Ù´ï¿½ ï¿½Þ¼Òµï¿½
   }).then((res) => res.json())
       .then((res) => {
         if (res.success){
@@ -55,19 +60,19 @@ function start(){
         }
       })
       .catch((err) => {
-        console.log(new Error("ºÒ·¯¿À±â ½ÇÆÐ"));
+        console.log(new Error("ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"));
       });
   myBarChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: students, //ÇÐ»ý
+      labels: students, //ï¿½Ð»ï¿½
       datasets: [{
         label: "Revenue",
         backgroundColor: "#4e73df",
         hoverBackgroundColor: "#2e59d9",
         borderColor: "#4e73df",
-        data: scores, //Á¡¼ö
-      }], //¹ÙÅ×ÀÌºí ¿µ¿ª
+        data: scores, //ï¿½ï¿½ï¿½ï¿½
+      }], //ï¿½ï¿½ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½
     },
     options: {
       onClick: function(point, event){

@@ -53,9 +53,11 @@
             </li>
             <div class="topbar-divider d-none d-sm-block"></div>
 
+            
+
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
-                <a class="nav-link dropdown-toggle" onClick="location.href=`/roomList?id=${schoolid}&name=${nickname}`" id="userDropdown">
+                <a class="nav-link dropdown-toggle" onClick="goToRoomList()" id="userDropdown">
                     <span id="topName" class="mr-2 d-none d-lg-inline text-gray-600 small">이름</span>
                     <img class="img-profile rounded-circle"
                         src="/design/undraw_profile.svg">
@@ -70,7 +72,7 @@
     
     <div id="welcome" class= "container-fluid">
         <form id = "professorForm" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
+                        <div id="inputGroup" class="input-group">
                             <input id="roomName" type="text" class="form-control bg-light border-0 small" placeholder="Enter Room Name"
                                 aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
@@ -109,8 +111,26 @@
     </div>
     <div id="call">
         <div id="streams" style ="flex: auto; flex-wrap: wrap;">
-            <div id="myStream"><video id="myFace" autoplay playsinline width="400" height="400"></video><canvas id = "canvas" width="600" height="400"></canvas>
-                <h3 id="userNickname"></h3><button img src="/design/appbar.sound.mute.svg" id="mute">Mute</button><button id="camera">Turn Camera Off</button><button id = "capture">Capture</button><button id = "test">test start</button><button id="leave">Leave</button><select id="cameras"></select>
+            <div id="myStream">
+                <video id="myFace" autoplay playsinline width="400" height="400"></video>
+                <canvas id = "canvas" width="600" height="400"></canvas>
+                <h3 id="userNickname"></h3>
+                <a href="#" class="btn btn-primary btn-icon-split">
+                    <span id="mute" class="text">Mute</span>
+                </a>                
+                <a href="#" class="btn btn-primary btn-icon-split">
+                    <span id="camera" class="text">Turn Camera Off</span>
+                </a>                
+                <a href="#" class="btn btn-primary btn-icon-split">
+                    <span id="capture" class="text">Capture</span>
+                </a>  
+                <a href="#" class="btn btn-primary btn-icon-split">
+                    <span id="test" class="text">test start</span>
+                </a>  
+                <a href="#" class="btn btn-primary btn-icon-split">
+                    <span id="leave" class="text">Leave</span>
+                </a>
+                <select id="cameras"></select>
             </div>
         </div>
         <div id="chatRoom">
@@ -135,6 +155,12 @@
     </div>
     </div>
 </div>
+<script>
+    function goToRoomList(){
+        if (auth=='professor')
+            location.href="/roomList";
+    }
+</script>
 <!-- Bootstrap core JavaScript-->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

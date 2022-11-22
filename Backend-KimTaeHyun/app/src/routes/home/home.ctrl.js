@@ -9,6 +9,7 @@ const SocketIO = require("socket.io");
 const upload = multer({dest: "images/"});
 const wsServer = require("../../../app")
 const ViolationManager = require("../../model/ViolationManager")
+const RoomManager = require("../../model/RoomManager")
 
 const output = {
     home: (req, res) => {
@@ -82,11 +83,17 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
     summary: async (req, res) =>{
         const violationManager = new ViolationManager(req.body);
         const response = await violationManager.getStudentsScoresFromViolationScore();
+        console.log("below is summary");
+        console.log(response);
         return res.json(response);
     }
     ,
     roomList: async (req, res) =>{
-	
+        const roomManager = new RoomManager(req.body);
+        const response = await roomManager.getRoomsByProfessor();
+        console.log("below is roomList");
+        console.log(response);
+        return res.json(response);
     }
 }
 

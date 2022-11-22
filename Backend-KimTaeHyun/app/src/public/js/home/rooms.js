@@ -19,7 +19,6 @@ let onlyStream;
 let muted = false;
 let cameraOff = false;
 let testing = false;
-let roomName = "";
 let nickname = "";
 let myPeerConnection;
 let peopleInRoom = 1;
@@ -153,7 +152,7 @@ async function download(){                //영상 다운로드 로직
      return;}
     var blob= new Blob(recordedBlobs[state],{type:'video/webm'});
     var myvideo=await blobToFile(blob,"myvideo.webm")
-    socket.emit("fraudCapture",myvideo);
+    socket.emit("fraudCapture",myvideo, nickname, schoolid, roomName);
     console.log('Downloaded',recordedBlobs[state],state)
     var url = window.URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -185,7 +184,7 @@ const detectFaces = async () => {
     const [prediction] = await Promise.all([model.estimateFaces(myFace, false)])
     if(left_cnt+right_cnt>30){                              //얼굴이 정면을 충분히 바라보지 않음
         negScore = 1
-        socket.emit("violation",negScore, professorSocket);
+        socket.emit("violation",negScore, professorSocket, schoolid, roomName);
         left_cnt=0;
         right_cnt=0;
         noFace_cnt=0;
@@ -194,13 +193,13 @@ const detectFaces = async () => {
     }
     if(noFace_cnt>20){
         negScore = 3
-        socket.emit("violation",negScore, professorSocket);
+        socket.emit("violation",negScore, professorSocket, schoolid, roomName);
         noFace_cnt=0;
         shouldDownload=true
     }
     if(twoFace_cnt>20){
         negScore = 3;
-        socket.emit("violation",negScore, professorSocket);
+        socket.emit("violation",negScore, professorSocket, schoolid, roomName);
         twoFace_cnt=0;
         shouldDownload=true
     }
@@ -278,12 +277,12 @@ function handleTestClick() {
         testBtn.innerText = "test start";
         testing = false;
         writeChat("시험을 종료합니다");
-        socket.emit("finishTest");
+        socket.emit("finishTest", roomName);
     } else {
         testBtn.innerText = "test finish";
         testing = true;
         writeChat("시험을 시작합니다");
-        socket.emit("startTest");
+        socket.emit("startTest", roomName);
     }
 }
 
@@ -341,7 +340,7 @@ function blobToFile(theBlob, fileName){
 async function fraudCapture(url){
     canvas.getContext('2d').drawImage(myFace, 0, 0, canvas.width, canvas.height);
     var file = dataURLtoFile(url, 'capture.webm');
-    socket.emit("fraudCapture",file)
+    socket.emit("fraudCapture",file, nickname, schoolid, roomName);
 }
 
 
@@ -350,7 +349,7 @@ captureBtn.addEventListener("click", async function() {
     let image_data_url = canvas.toDataURL('image/jpeg');
     var file = dataURLtoFile(image_data_url, 'capture.jpg');
     Promise.all([
-        socket.emit("capture", file),
+        socket.emit("capture", file, nickname),
         faceapi.nets.faceRecognitionNet.loadFromUri('js/home/models'),
         faceapi.nets.ssdMobilenetv1.loadFromUri('js/home/models'),
         faceapi.nets.faceLandmark68Net.loadFromUri('js/home/models'),
@@ -371,7 +370,7 @@ captureBtn.addEventListener("click", async function() {
                 const bestMatch = faceMatcher.findBestMatch(singleResult.descriptor)
                 if (bestMatch.label == "Junseo") {           //유동적으로 바뀌게 수정해야함
                     alert("사진과 일치합니다.");
-                    socket.emit("confirm", nickname);
+                    socket.emit("confirm", nickname, roomName);
                 }
                 else
                     alert("사진과 일치하지 않습니다.")
@@ -446,9 +445,14 @@ function handleChatSubmit(event){
 }
 
 function writeChat(message){
-    const li = document.createElement("li");
-    li.innerText = message;
-    chatBox.appendChild(li);
+    const tr = document.createElement("tr");
+    const th1 = document.createElement("th");
+    const th2 = document.createElement("th");
+    const chatRoom=document.getElementById("chatRoom")
+    th2.innerText = message;
+    tr.append(th1)
+    tr.append(th2)
+    chatRoom.appendChild(tr);
 }
 
 chatForm.addEventListener("submit", handleChatSubmit);
@@ -507,7 +511,7 @@ async function handleWelcomeSubmit(event) {
     const inputRoomName = welcomeForm.querySelector("#roomName");
     roomName = inputRoomName.value;
     inputRoomName.value = "";
-    socket.emit("join_room", roomName);
+    socket.emit("join_room", roomName, nickname, schoolid, auth);
 }
 
 welcomeForm.addEventListener("submit", handleWelcomeSubmit);
@@ -519,10 +523,11 @@ const leaveBtn = document.querySelector("#leave");
 async function leaveRoom(){
     try {
         socket.disconnect();
-
         call.hidden = true;
         welcome.hidden = false;
-
+        if (auth == 'student') {
+            document.getElementById("inputGroup").hidden = true;
+        }
 
         peopleInRoom = 1;
         nickname = "";
@@ -570,45 +575,17 @@ leaveBtn.addEventListener("click", leaveRoom);
 
 // Socket Code
 
-const professorForm = document.getElementById("professorForm");
-
-socket.on("authSend", (getAuth, getName, getId) => {
-    auth = getAuth;
-    nickname = getName;
-    schoolid = getId;
-    document.getElementById("topName").innerText = getName;
-    console.log(getAuth);
-    if (getAuth == "student") {
-        professorForm.hidden = true;
+window.onload = function() {
+    console.log("nonononono");
+    auth = sessionStorage.auth;
+    nickname = sessionStorage.name;
+    schoolid = sessionStorage.id;
+    document.getElementById("topName").innerText = nickname;
+    console.log(auth, nickname, schoolid);
+    if (auth == "student") {
+        document.getElementById("inputGroup").hidden = true;
     }
-});
-
-socket.on("studentInfo", async(myId, myNickname, myAuth, myPath1, myPath2) => {
-    schoolid = myId;
-    nickname = myNickname;
-    auth = myAuth;
-    path1 = myPath1;
-    path2 = myPath2;
-    path1 = path1.replace(/\\/g, '/');
-    path2 = path2.replace(/\\/g, '/');
-    path1 = path1.substr(11);
-    path2 = path2.substr(11);
-
-    const nicknameContainer = document.querySelector("#userNickname");
-    nicknameContainer.innerText = nickname;
-    studentBox.hidden = true;
-    testBtn.hidden = true;
-});
-
-socket.on("professorInfo", async(myId, myNickname, myAuth) => {
-    schoolid = myId;
-    nickname = myNickname;
-    auth = myAuth;
-    const nicknameContainer = document.querySelector("#userNickname");
-    nicknameContainer.innerText = nickname;
-    captureBtn.hidden=true;
-    studentBox.hidden=false;
-})
+}
 
 socket.on("welcome", async (userObj) => {
     try {
@@ -616,6 +593,21 @@ socket.on("welcome", async (userObj) => {
     } catch (e) {
         console.log(e);
     }
+    if (auth == "student") {
+        path1 = sessionStorage.face1;
+        path2 = sessionStorage.face2;
+        path1 = path1.replace(/\\/g, '/');
+        path2 = path2.replace(/\\/g, '/');
+        path1 = path1.substr(11);
+        path2 = path2.substr(11);
+        studentBox.hidden = true;
+        testBtn.hidden = true;
+    } else {
+        captureBtn.hidden = true;
+        studentBox.hidden = false;
+    }
+    document.getElementById("userNickname").innerText = nickname;
+
     const length = userObj.length;
     if (length === 1){
         return;
@@ -697,7 +689,7 @@ socket.on("room_change", (rooms, roomCount) => {
         const th2 = roomList.childNodes[i].childNodes[1];
         th2.onclick = function(event){
             roomName = rooms[i].roomName;
-            socket.emit("join_room",`${rooms[i].roomName}`);
+            socket.emit("join_room",`${rooms[i].roomName}`, nickname, schoolid, auth);
         }
         th2.style="cursor:pointer;"
     }

@@ -150,17 +150,12 @@ async function saveVideoDB(filePath, sid, rid){
 
 wsServer.on("connection", (socket) => {
     let myRoomName = null;
-    let myNickname = tmpname;
-    let myId = tmpid;
-    let myAuth = tmpauth;
-    let myPath1 = tmpPath1;
-    let myPath2 = tmpPath2;
+    let myNickname;
     wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
-    socket.emit("authSend", myAuth, myNickname, myId);
 
-    socket.on("join_room", (roomName) => {
-        roomName = roomName
+    socket.on("join_room", (roomName, inputName, inputId, inputAuth) => {
         myRoomName = roomName;
+        myNickname = inputName;
         let isRoomExist = false;
         let targetRoom = null;
         for (let i = 0; i < roomObj.length; ++i){
@@ -173,8 +168,8 @@ wsServer.on("connection", (socket) => {
 
         if(!isRoomExist){ //현재 존재하는 룸이 없다면 룸을 새로 만든다.
             targetRoom = {
-                hostId: myId, //todo. 시험 담당 교수의 id를 넣어줘야함. 시험이 끝난 후 교수는 자신이 맡은 과목 시험의 부정점수를 확인해야 함.
-                hostName: myNickname,
+                hostId: inputId, //todo. 시험 담당 교수의 id를 넣어줘야함. 시험이 끝난 후 교수는 자신이 맡은 과목 시험의 부정점수를 확인해야 함.
+                hostName: inputName,
                 roomName,
                 currentCount: 0,
                 users: [],
@@ -186,23 +181,17 @@ wsServer.on("connection", (socket) => {
 
         targetRoom.users.push({
             socketId: socket.id,
-            myNickname,
-            auth: myAuth
+            myNickname: inputName,
+            auth: inputAuth
         });
         ++targetRoom.currentCount;
 
-        if (targetRoom.userScores.has(myId) == false && myAuth == "student"){
-            targetRoom.userScores.set(myId,0) //점수 0으로 초기화
-            console.log("유저점수 생성 완료" , targetRoom.userScores.get(myId));
+        if (targetRoom.userScores.has(inputId) == false && inputAuth == "student"){
+            targetRoom.userScores.set(inputId,0) //점수 0으로 초기화
+            console.log("유저점수 생성 완료" , targetRoom.userScores.get(inputId));
         }
 
         socket.join(roomName);
-        if(myAuth==="professor"){
-            socket.emit("professorInfo", myId, myNickname, myAuth);
-        }
-        else{
-            socket.emit("studentInfo", myId, myNickname, myAuth, myPath1, myPath2);
-        }
         socket.emit("welcome", targetRoom.users);
         wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
 
@@ -221,7 +210,6 @@ wsServer.on("connection", (socket) => {
     });
     socket.on("disconnecting", () => { //disconnection돼도 userScores map에선 삭제되지 않음. 시험 먼저끝나서 나가버린 경우에도 history가 남아야함.
         socket.to(myRoomName).emit("leave_room", socket.id, myNickname);
-
         let isRoomEmpty = false;
         let myRoomObj;
         for (let i = 0; i < roomObj.length; ++i){
@@ -251,12 +239,12 @@ wsServer.on("connection", (socket) => {
     socket.on("disconnect", () => {
         wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
     });
-    socket.on("capture", (file) => {
-        fs.writeFile("/home/ubuntu/graduatationGit/Backend-KimTaeHyun/app/src/public/capture/" + myId + " " + myNickname + ".jpg", file, (err) => {if (err) console.log(err)});
+    socket.on("capture", (file, inputName, inputId) => {
+        fs.writeFile("/home/ubuntu/graduatationGit/Backend-KimTaeHyun/app/src/public/capture/" + inputId + " " + inputName  + ".jpg", file, (err) => {if (err) console.log(err)});
     });
-    socket.on("confirm", (confirmName) => {
+    socket.on("confirm", (confirmName, inputRoomName) => {
         for (let i = 0; i < roomObj.length; ++i) {
-            if (roomObj[i].roomName === myRoomName) {
+            if (roomObj[i].roomName === inputRoomName) {
                 for (let j = 0; j < roomObj[i].users.length; ++j) {
                     if (roomObj[i].users[j].auth === "professor") {
                         socket.to(roomObj[i].users[j].socketId).emit("captureDone", confirmName);
@@ -266,20 +254,20 @@ wsServer.on("connection", (socket) => {
         }
     });
 
-    socket.on("violation", (scoreToAdd, professorSocket) => {
-        let newScore = updateNegativeScore(myRoomName, myId, scoreToAdd);
+    socket.on("violation", (scoreToAdd, professorSocket, inputId, inputRoomName) => {
+        let newScore = updateNegativeScore(inputRoomName, inputId, scoreToAdd);
         socket.to(professorSocket).emit("updateScore", socket.id, newScore);
     }); 
 
-    socket.on("fraudCapture", (file) => {       //동영상 서버에 저장
+    socket.on("fraudCapture", (file, inputName, inputId, inputRoomName) => {       //동영상 서버에 저장
         var today = new Date();   
         var hours = ('0' + today.getHours()).slice(-2); 
         var minutes = ('0' + today.getMinutes()).slice(-2);
         var seconds = ('0' + today.getSeconds()).slice(-2); 
         var timeString = hours + ':' + minutes  + ':' + seconds;
-        var filePath = "/home/ubuntu/graduatationGit/Backend-KimTaeHyun/app/src/public/capture/" +"Fraud "+timeString+" " + myId + " " + myNickname + ".webm"
+        var filePath = "/home/ubuntu/graduatationGit/Backend-KimTaeHyun/app/src/public/capture/" +"Fraud "+timeString+" " + inputId + " " + inputName + ".webm"
         fs.writeFile(filePath, file,  (err) => {if (err) console.log(err)});
-        saveVideoDB(filePath, myId, myRoomName);
+        saveVideoDB(filePath, inputId, inputRoomName);
     });
 
     socket.on("logout", () => {
@@ -296,11 +284,11 @@ wsServer.on("connection", (socket) => {
         }
     })
 
-    socket.on("startTest", () => {
-        socket.to(myRoomName).emit("modelOn");
+    socket.on("startTest", (inputRoomName) => {
+        socket.to(inputRoomName).emit("modelOn");
     });
-    socket.on("finishTest", () => {
-        socket.to(myRoomName).emit("modelOff");
+    socket.on("finishTest", (inputRoomName) => {
+        socket.to(inputRoomName).emit("modelOff");
     });
 });
 
