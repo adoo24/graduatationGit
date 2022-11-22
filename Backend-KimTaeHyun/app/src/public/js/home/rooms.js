@@ -98,6 +98,7 @@ async function getMedia(deviceId){
             deviceId ? myCameraConstraints : myInitialConstrains
         );
         myFace.srcObject = onlyStream;
+        document.getElementById("myStream").style.order= -999;
         if(!deviceId){
             await getCameras();
         }
@@ -261,7 +262,7 @@ function handleMuteClick() {
 
 function handleCameraClick() {
     myStream.getVideoTracks().forEach((track) => (track.enabled = !track.enabled));
-
+    onlyStream.getVideoTracks().forEach((track) => (track.enabled = !track.enabled));
     if(cameraOff){
         cameraBtn.innerText = "Turn Camera Off";
         cameraOff = false;
@@ -525,7 +526,6 @@ async function leaveRoom(){
 
         peopleInRoom = 1;
         nickname = "";
-        auth = "";
         schoolid = "";
         myStream.getTracks().forEach((track) => track.stop());
         const nicknameContainer = document.querySelector("#userNickname");
@@ -569,6 +569,15 @@ async function clearAllChat(){
 leaveBtn.addEventListener("click", leaveRoom);
 
 // Socket Code
+
+const professorForm = document.getElementById("professorForm");
+
+socket.on("authSend", (getAuth) => {
+    auth = getAuth;
+    if (getAuth == "student") {
+        professorForm.hidden = true;
+    }
+});
 
 socket.on("studentInfo", async(myId, myNickname, myAuth, myPath1, myPath2) => {
     schoolid = myId;
@@ -686,6 +695,7 @@ socket.on("room_change", (rooms, roomCount) => {
 // 변경된 점수 받기
 socket.on("updateScore", (remoteSocketId, updateScore) => {
     studentList[remoteSocketId] = updateScore;
+    document.getElementById(remoteSocketId).style.order = -1 * updateScore;
     document.getElementById(remoteSocketId).childNodes[2].innerText = updateScore; //?
 });
 
@@ -757,6 +767,7 @@ function paintPeerFace(peerStream, id, remoteNickname, remoteAuth){
     const streams = document.querySelector("#streams");
     const div = document.createElement("div");
     div.id = id;
+    div.style.order = studentList[id];
     const video = document.createElement("video");
     video.autoplay = true;
     video.playsInline = true;

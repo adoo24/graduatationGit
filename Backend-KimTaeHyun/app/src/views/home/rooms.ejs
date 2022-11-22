@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noom </title>
     <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+    <link rel="stylesheet" href="/css/home/rooms.css">
 </head>
 
 <body>
@@ -19,12 +20,13 @@
     </div> -->
 
     <div id="welcome">
-        <form><input id="roomName" placeholder="room name" required type="text"><button>Enter room</button><button id = "logout">logout</button></form>
+        <button id = "logout">logout</button>
+        <form id="professorForm"><input id="roomName" placeholder="room name" required type="text"><button>Enter room</button></form>
         <h4>Open Rooms:</h4>
         <ul></ul>
     </div>
     <div id="call">
-        <div id="streams">
+        <div id="streams" style ="flex: auto;">
             <div id="myStream"><video id="myFace" autoplay playsinline width="400" height="400"></video><canvas id = "canvas" width="600" height="400"></canvas>
                 <h3 id="userNickname"></h3><button id="mute">Mute</button><button id="camera">Turn Camera Off</button><button id = "capture">Capture</button><button id = "test">test start</button><button id="leave">Leave</button><select id="cameras"></select>
             </div>

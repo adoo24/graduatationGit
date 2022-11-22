@@ -137,6 +137,7 @@ wsServer.on("connection", (socket) => {
     let myPath1 = tmpPath1;
     let myPath2 = tmpPath2;
     wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
+    socket.emit("authSend", myAuth);
 
     socket.on("join_room", (roomName) => {
         roomName = roomName

@@ -27,6 +27,9 @@ const output = {
     upload: (req,res) =>{
         res.render("home/face-register");
     },
+    charts: (req,res)=>{
+        res.render("home/charts");
+    },
 }
 
 
