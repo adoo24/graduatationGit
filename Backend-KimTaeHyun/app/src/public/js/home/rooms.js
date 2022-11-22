@@ -36,8 +36,6 @@ logOutBtn.addEventListener("click", () => {
      socket.emit("logout");
 })
 
-
-
 async function getCameras(){
     try{
         const devices = await navigator.mediaDevices.enumerateDevices();

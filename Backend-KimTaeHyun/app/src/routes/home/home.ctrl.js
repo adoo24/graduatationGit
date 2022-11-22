@@ -70,7 +70,7 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
         const response = await imageUpload.register(); //db에 저장
         console.log(response);
         return res.json(response); //성공/실패
-    },
+    }
 }
 
 module.exports = { //module.exports하면 지금 이 파일 home.ctrl.js를 import한 곳에서 output과 process함수 사용 가능
