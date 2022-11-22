@@ -8,6 +8,7 @@ const http = require("http");
 const SocketIO = require("socket.io");
 const upload = multer({dest: "images/"});
 const wsServer = require("../../../app")
+const ViolationManager = require("../../model/ViolationManager")
 
 const output = {
     home: (req, res) => {
@@ -27,9 +28,12 @@ const output = {
     upload: (req,res) =>{
         res.render("home/face-register");
     },
-    charts: (req,res)=>{
+    summary: (req,res)=>{
         res.render("home/charts");
     },
+    roomList: (req,res)=>{
+        res.render("home/roomList");
+    }
 }
 
 
@@ -73,6 +77,16 @@ const process = { //이경우 public/js/home에 있는 js파일들, 즉 프론�
         const response = await imageUpload.register(); //db에 저장
         console.log(response);
         return res.json(response); //성공/실패
+    }
+    ,
+    summary: async (req, res) =>{
+        const violationManager = new ViolationManager(req.body);
+        const response = await violationManager.getStudentsScoresFromViolationScore();
+        return res.json(response);
+    }
+    ,
+    roomList: async (req, res) =>{
+	
     }
 }
 

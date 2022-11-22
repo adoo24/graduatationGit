@@ -26,8 +26,7 @@
                     
         <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown no-arrow">
-                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="/rooms" id="userDropdown">
                     <span class="mr-2 d-none d-lg-inline text-gray-600 large" id = "title">감독을 부탁해</span>
                     
                 </a>
@@ -43,20 +42,14 @@
 
             
 
-            <li class="nav-item dropdown no-arrow">
-                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 large" id = "logout">logout</span>
-                    
-                </a>
-                
-            </li>
+            
             <div class="topbar-divider d-none d-sm-block"></div>
 
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
-                <a class="nav-link dropdown-toggle" onClick="location.href=`/roomList?id=${schoolid}&name=${nickname}`" id="userDropdown">
-                    <span id="topName" class="mr-2 d-none d-lg-inline text-gray-600 small">이름</span>
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="topName">이름</span>
                     <img class="img-profile rounded-circle"
                         src="/design/undraw_profile.svg">
                 </a>
@@ -69,23 +62,12 @@
     <!-- End of Topbar -->
     
     <div id="welcome" class= "container-fluid">
-        <form id = "professorForm" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input id="roomName" type="text" class="form-control bg-light border-0 small" placeholder="Enter Room Name"
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-arrow-right fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-        </form>
         <!-- Page Heading -->
         <div class="col">
             <div class="col-xl-150 col-lg-150">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">방목록</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">교수님의 온라인 시험 목록</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -93,7 +75,8 @@
                                 <thead>
                                     <tr>
                                         <th data-field='id'>id</th>
-                                        <th data-field='name'>name</th>
+                                        <th data-field='date'>날짜</th>
+                                        <th data-field='name'>방이름</th>
                                     </tr>
                                 </thead>
                                 <tbody id = "ListRoom">
@@ -106,32 +89,6 @@
             </div>
 
         </div>        
-    </div>
-    <div id="call">
-        <div id="streams" style ="flex: auto; flex-wrap: wrap;">
-            <div id="myStream"><video id="myFace" autoplay playsinline width="400" height="400"></video><canvas id = "canvas" width="600" height="400"></canvas>
-                <h3 id="userNickname"></h3><button img src="/design/appbar.sound.mute.svg" id="mute">Mute</button><button id="camera">Turn Camera Off</button><button id = "capture">Capture</button><button id = "test">test start</button><button id="leave">Leave</button><select id="cameras"></select>
-            </div>
-        </div>
-        <div id="chatRoom">
-            <ul id="chatBox"></ul>
-            <form id = "chatForm" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                <div class="input-group">
-                    <input id="roomName" type="text" class="form-control bg-light border-0 small" placeholder="Write chat"
-                        aria-label="Search" aria-describedby="basic-addon2">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="button">
-                            <i class="fas fa-arrow-right fa-sm"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div id="studentList">
-            <ul id="studentBox">
-                <li>현재 접속 중인 학생의 목록</li>
-            </ul>
-        </div>
     </div>
     </div>
 </div>
@@ -159,7 +116,7 @@
 <!-- Custom scripts for all pages-->
 <script src="js/sb-admin-2.min.js"></script>
 <script src="/socket.io/socket.io.js"> </script>
-<script src="/js/home/rooms.js"></script>
+<script src="/js/home/roomList.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@3.11.0/dist/tf-core.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@3.11.0/dist/tf-converter.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@3.11.0/dist/tf-backend-webgl.min.js"></script>

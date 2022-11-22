@@ -44,6 +44,7 @@ let studentList = {};
 
 logOutBtn.addEventListener("click", () => {
     socket.emit("logout");
+    sessionStorage.clear();
     document.location.replace('/');
     console.log("go to main page");
 })
@@ -571,8 +572,12 @@ leaveBtn.addEventListener("click", leaveRoom);
 
 const professorForm = document.getElementById("professorForm");
 
-socket.on("authSend", (getAuth) => {
+socket.on("authSend", (getAuth, getName, getId) => {
     auth = getAuth;
+    nickname = getName;
+    schoolid = getId;
+    document.getElementById("topName").innerText = getName;
+    console.log(getAuth);
     if (getAuth == "student") {
         professorForm.hidden = true;
     }
@@ -673,22 +678,28 @@ socket.on("leave_room", (leaveSocketId, nickname) => {
 })
 
 socket.on("room_change", (rooms, roomCount) => {
-    const roomList = welcome.querySelector("ul");
-    roomList.innerHTML = "";
+    const roomList = document.getElementById("ListRoom");
+    roomList.innerHTML="";
     if(rooms.length === 0){
         return;
     }
     for (let i = 0; i < rooms.length; ++i){
-        const li = document.createElement("button");
-        li.innerText = `${rooms[i]}`;
-        roomList.append(li);
+        const tr = document.createElement("tr");
+        const th1 = document.createElement("th");
+        const th2 = document.createElement("th");
+        th1.innerText= `${rooms[i].hostName}`;
+        th2.innerText = `${rooms[i].roomName}`;
+        tr.append(th1)
+        tr.append(th2)
+        roomList.append(tr);
     }
     for (let i =0;i<rooms.length;i++){
-        const btn = roomList.childNodes[i];
-        btn.onclick = function(event){
-            roomName = rooms[i];
-            socket.emit("join_room",`${rooms[i]}`);
+        const th2 = roomList.childNodes[i].childNodes[1];
+        th2.onclick = function(event){
+            roomName = rooms[i].roomName;
+            socket.emit("join_room",`${rooms[i].roomName}`);
         }
+        th2.style="cursor:pointer;"
     }
 });
 

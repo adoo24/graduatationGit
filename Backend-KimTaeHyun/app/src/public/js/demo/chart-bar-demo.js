@@ -7,14 +7,14 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   // *     return: '1 234,56'
   number = (number + '').replace(',', '').replace(' ', '');
   var n = !isFinite(+number) ? 0 : +number,
-    prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-    sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
-    dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
-    s = '',
-    toFixedFix = function(n, prec) {
-      var k = Math.pow(10, prec);
-      return '' + Math.round(n * k) / k;
-    };
+      prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+      sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+      dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+      s = '',
+      toFixedFix = function(n, prec) {
+        var k = Math.pow(10, prec);
+        return '' + Math.round(n * k) / k;
+      };
   // Fix for IE parseFloat(0.55).toFixed(0) = 0;
   s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
   if (s[0].length > 3) {
@@ -28,26 +28,51 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 }
 var ctx,myBarChart;
 // Bar Chart Example
+  var students;
+  var scores;
 
 function start(){
   ctx = document.getElementById("myBarChart");
+  const req = {
+    roomID: "hihi",
+  };
+   console.log("fetch before");
+  fetch("/charts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(req), //단순히 문자열로 바꾸는 메소드
+  }).then((res) => res.json())
+      .then((res) => {
+        if (res.success){
+	  console.log(res);
+          students = res["students"];
+          scores = res["scores"];
+        } else{
+          console.log("fail");
+          alert("fail");
+        }
+      })
+      .catch((err) => {
+        console.log(new Error("불러오기 실패"));
+      });
   myBarChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ["January", "February", "March", "April", "May", "June","J","s","hi","sd","sdd","asd","asa","ads"],
+      labels: students, //학생
       datasets: [{
         label: "Revenue",
         backgroundColor: "#4e73df",
         hoverBackgroundColor: "#2e59d9",
         borderColor: "#4e73df",
-        data: [4215, 5312, 6251, 7841, 9821, 14984,10000,12312,12123,12321,3212,3131,32123,1231],
-      }],
+        data: scores, //점수
+      }], //바테이블 영역
     },
     options: {
       onClick: function(point, event){
         if (event.length<=0) return;
         const index=event[0]['_index']
-        console.log(myBarChart.config.data.datasets[0].data[index])
         console.log(myBarChart.config.data.labels[index])
       },
       maintainAspectRatio: false,
@@ -76,7 +101,7 @@ function start(){
         yAxes: [{
           ticks: {
             min: 0,
-            max: 40000,
+            max: 10,
             maxTicksLimit: 5,
             padding: 10,
             // Include a dollar sign in the ticks
@@ -117,5 +142,5 @@ function start(){
       },
     }
   });
-  
+
 }

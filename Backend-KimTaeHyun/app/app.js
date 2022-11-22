@@ -19,6 +19,7 @@ var tmpPath1;
 var tmpPath2;
 var toDestory;
 
+
 // Certificate 인증서 경로
 const privateKey = fs.readFileSync('/etc/letsencrypt/live/bemysupervisor.com/privkey.pem', 'utf8');
 const certificate = fs.readFileSync('/etc/letsencrypt/live/bemysupervisor.com/cert.pem', 'utf8');
@@ -29,8 +30,6 @@ const credentials = {
 	cert: certificate,
 	ca: ca
 };
-
-
 
 //앱 세팅
 app.set("views", "./src/views");
@@ -85,10 +84,16 @@ let roomObj = [
     // },
 ];
 
+let tmpObj;
+
 function publicRooms(){
     const publicRooms = [];
     for (let i = 0; i < roomObj.length; ++i){
-        publicRooms.push(roomObj[i].roomName);
+        tmpObj = {
+            roomName: roomObj[i].roomName,
+            hostName: roomObj[i].hostName
+        };
+        publicRooms.push(tmpObj);
     }
     return publicRooms;
 }
@@ -116,11 +121,24 @@ function updateNegativeScore(myRoomName, myId, scoreToAdd){ //수정
 async function saveRoomDB(roomInfo){
     let rid = roomInfo.roomName;
     let rtime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
     let hostID = roomInfo.hostId;
-    await db.query("insert into room (rid, hostID, rtime) values (?,?,?);",[rid, hostID, rtime], (err,data) =>{
+    await db.query("insert into room (rid, pid, rtime) values (?,?,?);",[rid, hostID, rtime], (err,data) =>{
       if (err) console.log(err);
       else console.log("룸 DB저장 성공");
     });
+}
+
+async function saveViolationScoresDB(roomInfo){
+    let rid = roomInfo.roomName;
+    let userScores = roomInfo.userScores;
+    console.log(userScores);
+    userScores.forEach((value,key) =>{
+        db.query("insert into NegativeScore (sid, rid, score) values (?,?,?);",[key, rid, value], (err,data) =>{
+            if (err) console.log(err);
+            else console.log("룸 DB저장 성공");
+        });
+    })
 }
 
 async function saveVideoDB(filePath, sid, rid){
@@ -138,7 +156,7 @@ wsServer.on("connection", (socket) => {
     let myPath1 = tmpPath1;
     let myPath2 = tmpPath2;
     wsServer.sockets.emit("room_change", publicRooms(), publicRoomCount());
-    socket.emit("authSend", myAuth);
+    socket.emit("authSend", myAuth, myNickname, myId);
 
     socket.on("join_room", (roomName) => {
         roomName = roomName
@@ -156,6 +174,7 @@ wsServer.on("connection", (socket) => {
         if(!isRoomExist){ //현재 존재하는 룸이 없다면 룸을 새로 만든다.
             targetRoom = {
                 hostId: myId, //todo. 시험 담당 교수의 id를 넣어줘야함. 시험이 끝난 후 교수는 자신이 맡은 과목 시험의 부정점수를 확인해야 함.
+                hostName: myNickname,
                 roomName,
                 currentCount: 0,
                 users: [],
@@ -172,7 +191,7 @@ wsServer.on("connection", (socket) => {
         });
         ++targetRoom.currentCount;
 
-        if (targetRoom.userScores.has(myId) == false){
+        if (targetRoom.userScores.has(myId) == false && myAuth == "student"){
             targetRoom.userScores.set(myId,0) //점수 0으로 초기화
             console.log("유저점수 생성 완료" , targetRoom.userScores.get(myId));
         }
@@ -204,8 +223,10 @@ wsServer.on("connection", (socket) => {
         socket.to(myRoomName).emit("leave_room", socket.id, myNickname);
 
         let isRoomEmpty = false;
+        let myRoomObj;
         for (let i = 0; i < roomObj.length; ++i){
             if(roomObj[i].roomName === myRoomName){
+                myRoomObj = roomObj[i];
                 const newUsers = roomObj[i].users.filter(
                     (user) => user.socketId != socket.id
                 );
@@ -218,11 +239,13 @@ wsServer.on("connection", (socket) => {
             }
         }
         if (isRoomEmpty){
+            saveViolationScoresDB(myRoomObj);
             const newRoomObj = roomObj.filter(
                 (roomObj) => roomObj.currentCount != 0
             );
             roomObj = newRoomObj;
         }
+
 
     });
     socket.on("disconnect", () => {

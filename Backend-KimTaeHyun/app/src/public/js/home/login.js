@@ -24,6 +24,13 @@ function login() {
     }).then((res) => res.json())
         .then((res) => {
             if (res.success){
+                sessionStorage.setItem("id", res.id);
+                sessionStorage.setItem("auth", res.auth);
+                sessionStorage.setItem("name", res.nickname);
+                if (res.auth == 'student') {
+                    sessionStorage.setItem("face1", res.face1);
+                    sessionStorage.setItem("face2", res.face2);
+                }
                 location.href = "/rooms"
             } else{
                 alert(res.msg);
