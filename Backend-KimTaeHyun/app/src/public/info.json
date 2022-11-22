@@ -1,3 +1,4 @@
 [
-    {"name":"hi","age":12,"salary":30000}
+    {"name":"hi","age":12,"salary":30000},
+    {"name":"ok","age":32,"salary":123}
 ]

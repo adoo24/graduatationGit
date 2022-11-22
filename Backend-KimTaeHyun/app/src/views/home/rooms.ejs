@@ -8,11 +8,19 @@
     <title>Noom </title>
     <link rel="stylesheet" href="https://unpkg.com/mvp.css">
     <link rel="stylesheet" href="/css/home/rooms.css">
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 </head>
 
 <body>
 <header>
-    <h1>감독을 부탁해 </h1>
+    <h1 id = "title">감독을 부탁해 </h1>
 </header>
 <main>
     <!-- <div id = "logoutForm" style="position: absolute; left: 20px; top: 250px;">
@@ -26,7 +34,7 @@
         <ul></ul>
     </div>
     <div id="call">
-        <div id="streams" style ="flex: auto;">
+        <div id="streams" style ="flex: auto; flex-wrap: wrap;">
             <div id="myStream"><video id="myFace" autoplay playsinline width="400" height="400"></video><canvas id = "canvas" width="600" height="400"></canvas>
                 <h3 id="userNickname"></h3><button id="mute">Mute</button><button id="camera">Turn Camera Off</button><button id = "capture">Capture</button><button id = "test">test start</button><button id="leave">Leave</button><select id="cameras"></select>
             </div>
@@ -42,6 +50,15 @@
         </div>
     </div>
 </main>
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin-2.min.js"></script>
 <script src="/socket.io/socket.io.js"> </script>
 <script src="/js/home/rooms.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@3.11.0/dist/tf-core.min.js"></script>

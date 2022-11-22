@@ -493,6 +493,7 @@ async function initCall() {
         welcome.hidden = true;
         call.hidden = false;
         await getMedia();
+        document.getElementById("title").innerText= roomName;
     } catch (e) {
         console.log(e);
     }
@@ -685,6 +686,7 @@ socket.on("room_change", (rooms, roomCount) => {
     for (let i =0;i<rooms.length;i++){
         const btn = roomList.childNodes[i];
         btn.onclick = function(event){
+            roomName = rooms[i];
             socket.emit("join_room",`${rooms[i]}`);
         }
     }
