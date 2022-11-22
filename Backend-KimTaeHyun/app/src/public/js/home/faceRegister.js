@@ -35,10 +35,10 @@ async function start() {
         detections = await faceapi.detectAllFaces(imgs).withFaceLandmarks().withFaceDescriptors()
         let detect2 = detections.length
         if (detect2==0 || detect1==0){
-            console.log("No Human")
+            alert("사람의 얼굴이 나오는 사진을 입력해주세요.");
         }
         else
-            console.log("Human")
+            alert("올바른 사진입니다.");
         fileReader1.readAsDataURL(selectedImage[0]);
         fileReader1.onload = () => {
             document.getElementById("previewImg1").src

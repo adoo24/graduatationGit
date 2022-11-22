@@ -240,9 +240,10 @@ wsServer.on("connection", (socket) => {
             }
         }
     });
-    socket.on("violation", (scoreToAdd) => {
-        let newScore = updateNegativeScore(myRoomName, myId, scoreToAdd)
-        socket.emit("updateScore", newScore);//업데이트된 점수 보냄.
+
+    socket.on("violation", (scoreToAdd, professorSocket) => {
+        let newScore = updateNegativeScore(myRoomName, myId, scoreToAdd);
+        socket.to(professorSocket).emit("updateScore", socket.id, newScore);
     }); 
 
     socket.on("fraudCapture", (file) => {       //동영상 서버에 저장
@@ -262,13 +263,20 @@ wsServer.on("connection", (socket) => {
                 if(err){
                     console.log(err);
                 }else{
-                    location.href('/login')
+                    console.log("go to mainpage");
                 }
             })
         }else{
-            location.href('/login');
+            console.log("go to mainpage");
         }
     })
+
+    socket.on("startTest", () => {
+        socket.to(myRoomName).emit("modelOn");
+    });
+    socket.on("finishTest", () => {
+        socket.to(myRoomName).emit("modelOff");
+    });
 });
 
 const handListen = () => console.log(`listening on http://localhost:3000`);

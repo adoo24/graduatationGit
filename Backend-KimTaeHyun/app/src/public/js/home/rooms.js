@@ -5,6 +5,7 @@ const muteBtn = document.getElementById("mute");
 const cameraBtn = document.getElementById("camera");
 const cameraSelect = document.getElementById("cameras");
 const captureBtn = document.getElementById("capture");
+const testBtn = document.getElementById("test");
 const canvas = document.getElementById("canvas");
 const logOutBtn = document.getElementById("logout");
 
@@ -17,6 +18,7 @@ let myStream;
 let onlyStream;
 let muted = false;
 let cameraOff = false;
+let testing = false;
 let roomName = "";
 let nickname = "";
 let myPeerConnection;
@@ -25,15 +27,25 @@ let auth = "";
 let schoolid = "";
 let path1 = ""
 let path2 = ""
+let interval1;
+let interval2;
+let interval3;
+let professorSocket;
+let changeForm;
+let changeValue;
 
 let pcObj = {
 
 };
 
+let studentList = {};
+
 // 카메라를 찾는 함수
 
 logOutBtn.addEventListener("click", () => {
-     socket.emit("logout");
+    socket.emit("logout");
+    document.location.replace('/');
+    console.log("go to main page");
 })
 
 async function getCameras(){
@@ -94,17 +106,19 @@ async function getMedia(deviceId){
 }
 let recorder;
 let recordedBlobs=[];
-recordedBlobs[0]=[];
-recordedBlobs[1]=[];
+for (let i =0;i<10;i++){
+    recordedBlobs[i]=new Array();
+}
 let state=0;
 const wait = (timeToDelay) => new Promise((resolve)=> setTimeout(resolve, timeToDelay))
 
 
 async function handleRecording(){                 //영상 5초단위로 저장하는 함수들
-    state=state^1
+    state=(state+1)%10
     await startRecording();
-    await wait(5000)
+    await wait(4000)
     await stopRecording()
+    await wait(300)
     download()
 }
 
@@ -118,13 +132,14 @@ function handleDataAvailable(event){
 async function startRecording(){
     recordedBlobs[state]=[];
     var options ={mimeType: 'video/webm'};
-    recorder=new MediaRecorder(myFace.srcObject,options);
-    console.log("recorder started")
+    recorder=await new MediaRecorder(myFace.srcObject,options);
     recorder.ondataavailable = handleDataAvailable;
     recorder.start(10);
+    console.log("recorder started",state,recorder)
 }
 
 async function stopRecording(){
+    console.log("stop에서 부른 recorder",state,recorder)
     recorder.stop();
     console.log("recorder stopped")
 }
@@ -132,23 +147,23 @@ async function stopRecording(){
 var shouldDownload=false;           //부정행위 발생시 true로 변해서 영상 다운로드
 
 async function download(){                //영상 다운로드 로직
-    if (!shouldDownload){console.log('Not downloaded');
+    if (!shouldDownload){console.log('Not downloaded',recordedBlobs[state],state);
      return;}
     var blob= new Blob(recordedBlobs[state],{type:'video/webm'});
-    var myvideo=blobToFile(blob,"myvideo.webm")
+    var myvideo=await blobToFile(blob,"myvideo.webm")
     socket.emit("fraudCapture",myvideo);
-    console.log('Downloaded')
-    // var url = window.URL.createObjectURL(blob);
-    // var a = document.createElement('a');
-    // a.style.display = 'none';
-    // a.href=url;
-    // a.download='test.webm';
-    // document.body.appendChild(a);
-    // a.click();
-    // setTimeout(function(){
-    //     document.body.removeChild(a);
-    //     window.URL.revokeObjectURL(url);
-    // },100);
+    console.log('Downloaded',recordedBlobs[state],state)
+    var url = window.URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.style.display = 'none';
+    a.href=url;
+    a.download='test.webm';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    },100);
 }
 
 let flag=1;     //손 위치 인식하기 위해서, 0이면 손들었다고 인식
@@ -165,31 +180,10 @@ function initiate(){        //부정 행위 로직 초기화
     shouldDownload=false
 }
 const detectFaces = async () => {
-    const [prediction,predictions] = await Promise.all([model.estimateFaces(myFace, false),model1.estimateHands(myFace)])
-    if (predictions.length > 0) {
-        const result = predictions[0].landmarks;
-        for(let i=0;i<5;i++){                                  //y값 위치로 손모양 판별
-           for(let j=0;j<3;j++){
-             if(result[(i*4)+j+2][1]>result[(i*4)+j+1][1]){
-               flag=0;                                  
-             }
-          }
-        }
-         for(let i=0;i<4;i++){                               //왼손만 인식
-           for(let j=0;j<4;j++){
-             if(result[(i+1)*4+j+1][0]<result[i*4+j+1][0]){
-               flag=0;
-             }
-           }
-         }
-        if(flag==1){
-          console.log("It is hand")                         //손 들었음
-        }
-        else flag=1;
-      }
+    const [prediction] = await Promise.all([model.estimateFaces(myFace, false)])
     if(left_cnt+right_cnt>30){                              //얼굴이 정면을 충분히 바라보지 않음
         negScore = 1
-        socket.emit("violation",negScore);
+        socket.emit("violation",negScore, professorSocket);
         left_cnt=0;
         right_cnt=0;
         noFace_cnt=0;
@@ -198,13 +192,13 @@ const detectFaces = async () => {
     }
     if(noFace_cnt>20){
         negScore = 3
-        socket.emit("violation",negScore);
+        socket.emit("violation",negScore, professorSocket);
         noFace_cnt=0;
         shouldDownload=true
     }
     if(twoFace_cnt>20){
         negScore = 3;
-        socket.emit("violation",negScore);
+        socket.emit("violation",negScore, professorSocket);
         twoFace_cnt=0;
         shouldDownload=true
     }
@@ -240,10 +234,9 @@ myFace.addEventListener("loadeddata", async () =>{
      try {
          if (auth == "student") {
              model = await blazeface.load();
-             model1 = await handpose.load();
-             setInterval(detectFaces, 100);
-             setInterval(handleRecording,5000);          //5초에 한번씩 영상 저장할지 말지 정함
-             setInterval(initiate,5000);   
+             //setInterval(detectFaces, 100);
+             //setInterval(handleRecording,10000);          //5초에 한번씩 영상 저장할지 말지 정함
+             //setInterval(initiate,10000);   
          }
      } catch (e) {
          console.log(e);
@@ -275,6 +268,50 @@ function handleCameraClick() {
         cameraOff = true;
     }
 }
+
+// 테스트 시작 / 종료
+
+function handleTestClick() {
+    if(testing) {
+        testBtn.innerText = "test start";
+        testing = false;
+        writeChat("시험을 종료합니다");
+        socket.emit("finishTest");
+    } else {
+        testBtn.innerText = "test finish";
+        testing = true;
+        writeChat("시험을 시작합니다");
+        socket.emit("startTest");
+    }
+}
+
+socket.on("modelOn", () => {
+    writeChat("시험을 시작합니다");
+    console.log("시험시작");
+    try {
+        if (auth == "student") {
+            interval1 = setInterval(detectFaces, 100);
+            interval2 = setInterval(handleRecording,5000);          //5초에 한번씩 영상 저장할지 말지 정함
+            interval3 = setInterval(initiate,5000);   
+        }
+    } catch (e) {
+        console.log(e);
+    }
+});
+
+socket.on("modelOff", () => {
+    writeChat("시험을 종료합니다");
+    console.log("시험 종료");
+    try {
+        if (auth = "student") {
+            clearInterval(interval1);
+            clearInterval(interval2);
+            clearInterval(interval3);
+        }
+    } catch (e) {
+        console.log(e);
+    }
+});
 
 // 캡쳐
 
@@ -388,6 +425,7 @@ async function handleCameraChange(){
 
 muteBtn.addEventListener("click", handleMuteClick);
 cameraBtn.addEventListener("click", handleCameraClick);
+testBtn.addEventListener("click", handleTestClick);
 cameraSelect.addEventListener("input", handleCameraChange);
 
 // Chatting room
@@ -544,6 +582,7 @@ socket.on("studentInfo", async(myId, myNickname, myAuth, myPath1, myPath2) => {
     const nicknameContainer = document.querySelector("#userNickname");
     nicknameContainer.innerText = nickname;
     studentBox.hidden = true;
+    testBtn.hidden = true;
 });
 
 socket.on("professorInfo", async(myId, myNickname, myAuth) => {
@@ -630,10 +669,22 @@ socket.on("room_change", (rooms, roomCount) => {
         return;
     }
     for (let i = 0; i < rooms.length; ++i){
-        const li = document.createElement("li");
-        li.innerText = `${rooms[i]}(${roomCount[i]})`;
+        const li = document.createElement("button");
+        li.innerText = `${rooms[i]}`;
         roomList.append(li);
     }
+    for (let i =0;i<rooms.length;i++){
+        const btn = roomList.childNodes[i];
+        btn.onclick = function(event){
+            socket.emit("join_room",`${rooms[i]}`);
+        }
+    }
+});
+
+// 변경된 점수 받기
+socket.on("updateScore", (remoteSocketId, updateScore) => {
+    studentList[remoteSocketId] = updateScore;
+    document.getElementById(remoteSocketId).childNodes[2].innerText = updateScore; //?
 });
 
 // RTC Code
@@ -660,22 +711,25 @@ async function makeConnection (remoteSocketId, remoteNickname, remoteAuth) {
     console.log(remoteAuth);
     if (auth === 'professor'){
         myPeerConnection.addEventListener("addstream", (event) => {
-            handleAddStream(event, remoteSocketId, remoteNickname);
+            handleAddStream(event, remoteSocketId, remoteNickname, remoteAuth);
         });
         myStream
           .getTracks()
           .forEach((track) => myPeerConnection.addTrack(track, myStream));
         if (remoteAuth == 'student'){
             insertStudent(remoteNickname);
+            studentList[remoteSocketId] = 0;
         }
     }
     else if (remoteAuth === 'professor'){
         myPeerConnection.addEventListener("addstream", (event) => {
-            handleAddStream(event, remoteSocketId, remoteNickname);
+            handleAddStream(event, remoteSocketId, remoteNickname, remoteAuth);
         });
         myStream
           .getTracks()
           .forEach((track) => myPeerConnection.addTrack(track, myStream));
+        professorSocket = remoteSocketId;
+        console.log(`상대 소켓 아이디는 ${professorSocket}`);
     }
 
     
@@ -692,12 +746,12 @@ function handleIce(event, remoteSocketId){
     }
 }
 
-function handleAddStream(event, remoteSocketId, remoteNickname){
+function handleAddStream(event, remoteSocketId, remoteNickname, remoteAuth){
     const peerStream = event.stream;
-    paintPeerFace(peerStream, remoteSocketId, remoteNickname);
+    paintPeerFace(peerStream, remoteSocketId, remoteNickname, remoteAuth);
 }
 
-function paintPeerFace(peerStream, id, remoteNickname){
+function paintPeerFace(peerStream, id, remoteNickname, remoteAuth){
     const streams = document.querySelector("#streams");
     const div = document.createElement("div");
     div.id = id;
@@ -710,9 +764,14 @@ function paintPeerFace(peerStream, id, remoteNickname){
     const nicknameContainer = document.createElement("h3");
     nicknameContainer.id = "userNickname";
     nicknameContainer.innerText = remoteNickname;
-    
     div.appendChild(video);
     div.appendChild(nicknameContainer);
+    if (remoteAuth != 'professor') {
+        const scoreContainer = document.createElement("h3");
+        scoreContainer.id = "userNegScore"
+        scoreContainer.innerText = 0;
+        div.appendChild(scoreContainer);
+    }
     streams.appendChild(div);
 }
 

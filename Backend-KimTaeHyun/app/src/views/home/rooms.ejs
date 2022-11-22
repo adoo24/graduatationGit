@@ -14,19 +14,19 @@
     <h1>감독을 부탁해 </h1>
 </header>
 <main>
-    <div id = "logout" style="position: absolute; left: 20px; top: 250px;">
+    <!-- <div id = "logoutForm" style="position: absolute; left: 20px; top: 250px;">
         <form id = "logout"><button>logout</button></form>
-    </div>
+    </div> -->
 
     <div id="welcome">
-        <form><input id="roomName" placeholder="room name" required type="text"><button>Enter room</button></form>
+        <form><input id="roomName" placeholder="room name" required type="text"><button>Enter room</button><button id = "logout">logout</button></form>
         <h4>Open Rooms:</h4>
         <ul></ul>
     </div>
     <div id="call">
         <div id="streams">
             <div id="myStream"><video id="myFace" autoplay playsinline width="400" height="400"></video><canvas id = "canvas" width="600" height="400"></canvas>
-                <h3 id="userNickname"></h3><button id="mute">Mute</button><button id="camera">Turn Camera Off</button><button id = "capture">Capture</button><button id="leave">Leave</button><select id="cameras"></select>
+                <h3 id="userNickname"></h3><button id="mute">Mute</button><button id="camera">Turn Camera Off</button><button id = "capture">Capture</button><button id = "test">test start</button><button id="leave">Leave</button><select id="cameras"></select>
             </div>
         </div>
         <div id="chatRoom">
