@@ -118,7 +118,7 @@ const wait = (timeToDelay) => new Promise((resolve)=> setTimeout(resolve, timeTo
 async function handleRecording(){                 //영상 5초단위로 저장하는 함수들
     state=(state+1)%10
     await startRecording();
-    await wait(4400)
+    await wait(4000)
     await stopRecording()
     await wait(300)
     download()
@@ -155,17 +155,17 @@ async function download(){                //영상 다운로드 로직
     var myvideo=await blobToFile(blob,"myvideo.webm")
     socket.emit("fraudCapture",myvideo);
     console.log('Downloaded',recordedBlobs[state],state)
-    // var url = window.URL.createObjectURL(blob);
-    // var a = document.createElement('a');
-    // a.style.display = 'none';
-    // a.href=url;
-    // a.download='test.webm';
-    // document.body.appendChild(a);
-    // a.click();
-    // setTimeout(function(){
-    //     document.body.removeChild(a);
-    //     window.URL.revokeObjectURL(url);
-    // },100);
+    var url = window.URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.style.display = 'none';
+    a.href=url;
+    a.download='test.webm';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    },100);
 }
 
 let flag=1;     //손 위치 인식하기 위해서, 0이면 손들었다고 인식
@@ -671,16 +671,22 @@ socket.on("room_change", (rooms, roomCount) => {
         return;
     }
     for (let i = 0; i < rooms.length; ++i){
-        const li = document.createElement("li");
-        li.innerText = `${rooms[i]}(${roomCount[i]})`;
+        const li = document.createElement("button");
+        li.innerText = `${rooms[i]}`;
         roomList.append(li);
+    }
+    for (let i =0;i<rooms.length;i++){
+        const btn = roomList.childNodes[i];
+        btn.onclick = function(event){
+            socket.emit("join_room",`${rooms[i]}`);
+        }
     }
 });
 
 // 변경된 점수 받기
 socket.on("updateScore", (remoteSocketId, updateScore) => {
     studentList[remoteSocketId] = updateScore;
-    document.getElementById(remoteSocketId).childNodes[2].innerText = updateScore;
+    document.getElementById(remoteSocketId).childNodes[2].innerText = updateScore; //?
 });
 
 // RTC Code
