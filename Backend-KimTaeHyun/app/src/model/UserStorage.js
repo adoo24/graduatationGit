@@ -82,9 +82,10 @@ class UserStorage {
         }
     }
 
-    static async getUserViolation(userID){
+    static async getUserViolation(userID, roomID){
         return new Promise((resolve,reject) =>{
-            db.query("select address, vtime from violation where sid = ?;", [userID]
+            db.query("select address, vtime from violation where sid = ? and rid = ?;",
+                [userID, roomID]
                 , (err, data) => {
                     if (err){
                         reject(`${err}`)

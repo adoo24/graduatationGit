@@ -116,7 +116,8 @@ function updateNegativeScore(myRoomName, myId, scoreToAdd){ //수정
 async function saveRoomDB(roomInfo){
     let rid = roomInfo.roomName;
     let rtime = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    await db.query("insert into room (rid, rtime) values (?,?);",[rid, rtime], (err,data) =>{
+    let hostID = roomInfo.hostId;
+    await db.query("insert into room (rid, hostID, rtime) values (?,?,?);",[rid, hostID, rtime], (err,data) =>{
       if (err) console.log(err);
       else console.log("룸 DB저장 성공");
     });
