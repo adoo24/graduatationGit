@@ -111,26 +111,32 @@
     </div>
     <div id="call">
         <div id="streams" style ="flex: auto; flex-wrap: wrap;">
-            <div id="myStream">
-                <video id="myFace" autoplay playsinline width="400" height="400"></video>
-                <canvas id = "canvas" width="600" height="400"></canvas>
-                <h3 id="userNickname"></h3>
-                <a href="#" class="btn btn-primary btn-icon-split">
-                    <span id="mute" class="text">Mute</span>
-                </a>                
-                <a href="#" class="btn btn-primary btn-icon-split">
-                    <span id="camera" class="text">Turn Camera Off</span>
-                </a>                
-                <a href="#" class="btn btn-primary btn-icon-split">
-                    <span id="capture" class="text">Capture</span>
-                </a>  
-                <a href="#" class="btn btn-primary btn-icon-split">
-                    <span id="test" class="text">test start</span>
-                </a>  
-                <a href="#" class="btn btn-primary btn-icon-split">
-                    <span id="leave" class="text">Leave</span>
-                </a>
-                <select id="cameras"></select>
+            <div class = "card shadow mb-4" id = "myStream">
+                <div class="card-header py-3" >
+                    <h6 id = "userNickname" class="m-0 font-weight-bold text-primary"></h6>
+                </div>
+                <div class="card-body">
+                    <video id="myFace" autoplay playsinline width="400" height="300"></video>
+                    <canvas id = "canvas" width="400" height="300"></canvas>
+                    <div>
+                        <a href="#" class="btn btn-primary btn-icon-split">
+                            <span id="mute" class="text">Mute</span>
+                        </a>                
+                        <a href="#" class="btn btn-primary btn-icon-split">
+                            <span id="camera" class="text">Turn Camera Off</span>
+                        </a>                
+                        <a href="#" class="btn btn-primary btn-icon-split">
+                            <span id="capture" class="text">Capture</span>
+                        </a>  
+                        <a href="#" class="btn btn-primary btn-icon-split">
+                            <span id="test" class="text">test start</span>
+                        </a>  
+                        <a href="#" class="btn btn-primary btn-icon-split">
+                            <span id="leave" class="text">Leave</span>
+                        </a>
+                    </div>
+                    <select id="cameras"></select>
+                </div>
             </div>
         </div>
         <div id="chatRoom">

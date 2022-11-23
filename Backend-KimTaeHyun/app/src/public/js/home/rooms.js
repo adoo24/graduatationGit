@@ -535,7 +535,6 @@ async function leaveRoom(){
         myStream.getTracks().forEach((track) => track.stop());
         const nicknameContainer = document.querySelector("#userNickname");
         nicknameContainer.innerText = "";
-
         myFace.srcObject = null;
         await clearAllVideos();
         await clearAllChat();
@@ -547,7 +546,7 @@ async function leaveRoom(){
 
 function removeVideo(leaveSocketId){
     const streams = document.querySelector("#streams");
-    const streamArr = streams.querySelectorAll("div");
+    const streamArr = streams.childNodes;
     streamArr.forEach((streamElement) => {
         if(streamElement.id === leaveSocketId){
             streams.removeChild(streamElement);
@@ -557,7 +556,7 @@ function removeVideo(leaveSocketId){
 
 async function clearAllVideos(){
     const streams = document.querySelector("#streams");
-    const streamArr = streams.querySelectorAll("div");
+    const streamArr = streams.childNodes;
     streamArr.forEach((streamElement) => {
         if(streamElement.id != "myStream"){
             streams.removeChild(streamElement);
@@ -769,19 +768,27 @@ function handleAddStream(event, remoteSocketId, remoteNickname, remoteAuth){
 function paintPeerFace(peerStream, id, remoteNickname, remoteAuth){
     const streams = document.querySelector("#streams");
     const div = document.createElement("div");
+    div.className = "card shadow mb-4"
     div.id = id;
     div.style.order = studentList[id];
+    const sonDiv=document.createElement("div");
+    sonDiv.className="card-header py-3"
+    const nicknameContainer = document.createElement("h6");
+    nicknameContainer.id = "userNickname";
+    nicknameContainer.innerText = remoteNickname;
+    nicknameContainer.class = "m-0 font-weight-bold text-primary"
+    sonDiv.append(nicknameContainer)
+    const sonDiv2 = document.createElement("div");
+    sonDiv2.className = "card-body"
     const video = document.createElement("video");
     video.autoplay = true;
     video.playsInline = true;
     video.width = "400";
-    video.height = "400";
+    video.height = "300";
     video.srcObject = peerStream;
-    const nicknameContainer = document.createElement("h3");
-    nicknameContainer.id = "userNickname";
-    nicknameContainer.innerText = remoteNickname;
-    div.appendChild(video);
-    div.appendChild(nicknameContainer);
+    sonDiv2.append(video)
+    div.appendChild(sonDiv);
+    div.appendChild(sonDiv2);
     if (remoteAuth != 'professor') {
         const scoreContainer = document.createElement("h3");
         scoreContainer.id = "userNegScore"
