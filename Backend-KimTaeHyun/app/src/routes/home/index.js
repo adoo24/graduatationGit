@@ -12,6 +12,7 @@ router.get("/register", ctrl.output.register);
 router.get("/face-register", ctrl.output.upload);
 router.get("/charts", ctrl.output.summary);
 router.get("/roomList" , ctrl.output.roomList);
+router.get("/ajax-api", ctrl.output.dataTable);
 
 router.post("/login", ctrl.process.login);
 router.post("/register",  ctrl.process.register);

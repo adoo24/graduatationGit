@@ -123,10 +123,17 @@ async function saveRoomDB(roomInfo){
     let rtime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     let hostID = roomInfo.hostId;
+    let success;
     await db.query("insert into room (rid, pid, rtime) values (?,?,?);",[rid, hostID, rtime], (err,data) =>{
-      if (err) console.log(err);
-      else console.log("룸 DB저장 성공");
+      if (err) {
+          console.log("룸네임 중복.")
+          success = false;
+      }else{
+          console.log("룸 DB저장 성공");
+          success = true;
+      }
     });
+    return success;
 }
 
 async function saveViolationScoresDB(roomInfo){
@@ -175,6 +182,7 @@ wsServer.on("connection", (socket) => {
                 users: [],
                 userScores: new Map() //수정됨. 여기서 users를 key = userID, value = negativeScore
             };
+	   
             saveRoomDB(targetRoom);
             roomObj.push(targetRoom);
         }

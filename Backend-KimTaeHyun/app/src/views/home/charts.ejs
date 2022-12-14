@@ -40,8 +40,7 @@
                     
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="/rooms" id="userDropdown">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 large">감독을 부탁해</span>
                                 
                             </a>
@@ -65,7 +64,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">박준철 교수님</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id = 'topName'>박준철 교수님</span>
                                 <img class="img-profile rounded-circle"
                                     src="/design/undraw_profile.svg">
                             </a>
@@ -115,9 +114,8 @@
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
-                                                    <th data-field='id'>id</th>
-                                                    <th data-field='name'>name</th>
-                                                    <th data-field='price'>price</th>
+                                                    <th data-field='id'>부정행위 시간</th>
+                                                    <th data-field='name'>영상</th>
                                                 </tr>
                                             </thead>
                                             
@@ -170,7 +168,7 @@
     <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/datatables-demo.js"></script>
+    <!-- <script src="js/demo/datatables-demo.js"></script> -->
 
 </body>
 

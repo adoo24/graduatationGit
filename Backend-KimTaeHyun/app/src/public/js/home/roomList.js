@@ -21,7 +21,7 @@ window.onload = function () {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(req), //단순히 문자열로 바꾸는 메소드
-    }).then((res) => res.json())
+    }).then((res) => res.json())	
         .then((res) => {
             if (res.success){
                 showRoomList(res['rooms'],res['times']);

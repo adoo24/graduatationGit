@@ -349,7 +349,7 @@ captureBtn.addEventListener("click", async function() {
     let image_data_url = canvas.toDataURL('image/jpeg');
     var file = dataURLtoFile(image_data_url, 'capture.jpg');
     Promise.all([
-        socket.emit("capture", file, nickname),
+        socket.emit("capture", file, nickname, schoolid),
         faceapi.nets.faceRecognitionNet.loadFromUri('js/home/models'),
         faceapi.nets.ssdMobilenetv1.loadFromUri('js/home/models'),
         faceapi.nets.faceLandmark68Net.loadFromUri('js/home/models'),

@@ -1,0 +1,126 @@
+
+> login-lecture@1.0.0 start
+> nodemon ./bin/www.js
+
+[33m[nodemon] 2.0.20[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): src/**/* app.js[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node ./bin/www.js`[39m
+events.js:291
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: EBADF: bad file descriptor, read
+Emitted 'error' event on ReadStream instance at:
+    at internal/fs/streams.js:191:14
+    at FSReqCallback.wrapper [as oncomplete] (fs.js:520:5) {
+  errno: -9,
+  code: 'EBADF',
+  syscall: 'read'
+}
+
+> login-lecture@1.0.0 start
+> nodemon ./bin/www.js
+
+[33m[nodemon] 2.0.20[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): src/**/* app.js[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node ./bin/www.js`[39m
+events.js:291
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: EBADF: bad file descriptor, read
+Emitted 'error' event on ReadStream instance at:
+    at internal/fs/streams.js:191:14
+    at FSReqCallback.wrapper [as oncomplete] (fs.js:520:5) {
+  errno: -9,
+  code: 'EBADF',
+  syscall: 'read'
+}
+
+> login-lecture@1.0.0 start
+> nodemon ./bin/www.js
+
+[33m[nodemon] 2.0.20[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): src/**/* app.js[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node ./bin/www.js`[39m
+events.js:291
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: EBADF: bad file descriptor, read
+Emitted 'error' event on ReadStream instance at:
+    at internal/fs/streams.js:191:14
+    at FSReqCallback.wrapper [as oncomplete] (fs.js:520:5) {
+  errno: -9,
+  code: 'EBADF',
+  syscall: 'read'
+}
+
+> login-lecture@1.0.0 start
+> nodemon ./bin/www.js
+
+[33m[nodemon] 2.0.20[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): src/**/* app.js[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node ./bin/www.js`[39m
+events.js:291
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: EBADF: bad file descriptor, read
+Emitted 'error' event on ReadStream instance at:
+    at internal/fs/streams.js:191:14
+    at FSReqCallback.wrapper [as oncomplete] (fs.js:520:5) {
+  errno: -9,
+  code: 'EBADF',
+  syscall: 'read'
+}
+
+> login-lecture@1.0.0 start
+> nodemon ./bin/www.js
+
+[33m[nodemon] 2.0.20[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): src/**/* app.js[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node ./bin/www.js`[39m
+events.js:291
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: EBADF: bad file descriptor, read
+Emitted 'error' event on ReadStream instance at:
+    at internal/fs/streams.js:191:14
+    at FSReqCallback.wrapper [as oncomplete] (fs.js:520:5) {
+  errno: -9,
+  code: 'EBADF',
+  syscall: 'read'
+}
+
+> login-lecture@1.0.0 start
+> nodemon ./bin/www.js
+
+[33m[nodemon] 2.0.20[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): src/**/* app.js[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node ./bin/www.js`[39m
+events.js:291
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: EBADF: bad file descriptor, read
+Emitted 'error' event on ReadStream instance at:
+    at internal/fs/streams.js:191:14
+    at FSReqCallback.wrapper [as oncomplete] (fs.js:520:5) {
+  errno: -9,
+  code: 'EBADF',
+  syscall: 'read'
+}

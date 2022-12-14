@@ -11,13 +11,11 @@ class ViolationStorage{
                     if (err){
                         reject(`${err}`)
                     } else {
-                        var address = new Array();
-                        var vTime = new Array();
+                        var dataList = []
                         for (let i = 0; i< data.length; ++i){
-                            address.push(data[i].address);
-                            vTime.push(data[i].vtime);
+                            dataList.push({address: data[i].address, time: data[i].vtime});
                         }
-                        resolve ({success: true, address: address, time: vTime});
+                        resolve ({data: dataList});
                     }
                 })
         })

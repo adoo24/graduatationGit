@@ -10,6 +10,7 @@ const upload = multer({dest: "images/"});
 const wsServer = require("../../../app")
 const ViolationManager = require("../../model/ViolationManager")
 const RoomManager = require("../../model/RoomManager")
+const ViolationStorage = require("../../model/ViolationStorage");
 
 const output = {
     home: (req, res) => {
@@ -34,6 +35,15 @@ const output = {
     },
     roomList: (req,res)=>{
         res.render("home/roomList");
+    },
+    dataTable: async (req,res) =>{
+        const sid = req.query.sid;
+        const rid = req.query.rid;
+	let response= await ViolationStorage.getUserViolation(sid, rid)
+		
+	response = JSON.stringify(response);
+	
+        res.send(response);
     }
 }
 
