@@ -11,7 +11,6 @@
 - 사용한 언어 : JavaScript
 - 사용한 기술 : Node.js, Express, socket.io, webRTC, tensorflow.js, MySQL, AWS EC2, AWS RDS, https
 - 프로젝트 진행 기간 : 2022년 3월 ~ 2022년 11월
-- 사이트 메인 페이지 : https://bemysupervisor.com
 
 # Project View And Description
 
